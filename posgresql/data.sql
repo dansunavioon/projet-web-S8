@@ -2,15 +2,13 @@
 -- Jeu de test PostgreSQL pour la base de données
 -- ----------------------------------------------------------
 
--- ----------------------------
--- Table: pays
--- ----------------------------
-INSERT INTO pays (nom_pays, nb_hbts_pays, pib_pays, monnaie_pays, taux_de_change_pays, langue_pays, capitale_pays) VALUES
-('France', 67000000, 2930000, 'Euro', 1.0, 'Français', 'Paris'),
-('États-Unis', 331000000, 21430000, 'Dollar', 1.08, 'Anglais', 'Washington'),
-('Allemagne', 83000000, 3846000, 'Euro', 1.0, 'Allemand', 'Berlin'),
-('Japon', 125800000, 5082000, 'Yen', 142.0, 'Japonais', 'Tokyo'),
-('Canada', 38000000, 1937000, 'Dollar canadien', 1.44, 'Anglais/Français', 'Ottawa');
+-- ----------------------------------------------------------
+-- Vider les tables pour un nouveau jeu de test (PostgreSQL)
+-- ----------------------------------------------------------
+TRUNCATE TABLE stage RESTART IDENTITY CASCADE;
+TRUNCATE TABLE entreprise RESTART IDENTITY CASCADE;
+TRUNCATE TABLE pays RESTART IDENTITY CASCADE;
+TRUNCATE TABLE utilisateur RESTART IDENTITY CASCADE;
 
 -- ----------------------------
 -- Table: utilisateur
@@ -113,7 +111,8 @@ INSERT INTO entreprise (nom_entreprise, nb_employes_entreprise, secteur_activite
 ('ThaiFoods', 700, 'Agroalimentaire', 'Thaïlande'),
 ('MalaysiaTech', 600, 'Informatique', 'Malaisie'),
 ('IndoFoods', 1200, 'Agroalimentaire', 'Indonésie'),
-('PhilippineLog', 500, 'Logistique', 'Philippines');
+('PhilippineLog', 500, 'Logistique', 'Philippines'),
+('GlobalServices', 850, 'Services numériques', 'France');
 
 -- ----------------------------
 -- Table: stage (avec description)
@@ -179,7 +178,7 @@ INSERT INTO stage (date_publication_stage, date_debut_stage, duree_jours_stage, 
 ('2026-02-26','2026-12-10',60,17,'Audit énergétique projet norvégien'),
 ('2026-02-27','2026-12-15',120,18,'Analyse financière clients Suisse'),
 ('2026-02-28','2026-12-20',180,19,'Consulting et gestion d’entreprise'),
-('2026-02-29','2026-12-25',75,20,'Amélioration production agroalimentaire Pologne'),
+('2026-02-28','2026-12-25',75,20,'Amélioration production agroalimentaire Pologne'),
 ('2026-03-01','2027-01-01',90,21,'Développement logiciel PME irlandaises'),
 ('2026-03-02','2027-01-05',60,22,'Projet informatique start-up Portugal'),
 ('2026-03-03','2027-01-10',120,23,'Support services clients Grèce'),
