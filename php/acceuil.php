@@ -5,11 +5,12 @@
   <title>Accueil</title>
 
   <link rel="stylesheet" href="../css/header.css">
-  <link rel="stylesheet" href="../css/accueil.css">
+  <link rel="stylesheet" href="../css/acceuil.css">
 </head>
 <body>
 
-  <? php include "../php/header.php"; ?>
+ <?php include "../php/header.php"; ?>
+
 
   <main>
     <h1>Accueil</h1>

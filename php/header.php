@@ -1,6 +1,6 @@
 <header class="site-header">
   <div class="header-inner">
-    <a href="/html/accueil.html" class="brand">
+    <a href="/php/accueil.php" class="brand">
     </a>
     <nav class="nav">
       <a href="/html/infos.html" class="nav-link">Contact us</a>
