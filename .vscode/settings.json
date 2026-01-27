@@ -1,0 +1,24 @@
+{
+    "sqltools.connections": [
+        {
+            "ssh": "Disabled",
+            "previewLimit": 50,
+            "server": "10.30.51.187",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "isen-projet-cipa4",
+            "database": "isen-projet",
+            "username": "isen-projet"
+        },
+        {
+            "ssh": "Disabled",
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "buildux",
+            "database": "buildux",
+            "username": "postgres"
+        }
+    ]
+}
