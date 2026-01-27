@@ -1,0 +1,102 @@
+/* ===== Variables couleurs (facile à modifier) ===== */
+:root {
+  --blue-bg: #cfe0ff;        /* fond du header (bleu clair) */
+  --blue-pill: #a9c4ff;      /* bouton Contact us */
+  --blue-logo: #8fb2ff;      /* rond du logo */
+  --text-dark: #0a1a33;
+  --white: #ffffff;
+  --shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+/* ===== Header global ===== */
+.site-header {
+  background-color: var(--blue-bg);
+  padding: 12px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* Contenu centré */
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ===== Logo rond à gauche ===== */
+.brand {
+  width: 44px;
+  height: 44px;
+  background-color: var(--blue-logo);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-size: 18px;
+  box-shadow: var(--shadow);
+}
+
+/* ===== Menu desktop ===== */
+.nav {
+  display: flex;
+  align-items: center;
+}
+
+/* Bouton Contact us */
+.nav-link {
+  background-color: var(--blue-pill);
+  color: var(--text-dark);
+  padding: 10px 18px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 600;
+  box-shadow: var(--shadow);
+  transition: background-color 0.2s ease;
+}
+
+.nav-link:hover {
+  background-color: #9dbbff;
+}
+
+/* ===== Burger menu ===== */
+.burger {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.burger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background-color: var(--text-dark);
+  margin: 5px 0;
+  border-radius: 2px;
+}
+
+/* ===== Menu mobile ===== */
+.nav-mobile {
+  display: none;
+  margin-top: 12px;
+  text-align: right;
+}
+
+.nav-mobile.is-open {
+  display: block;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .nav {
+    display: none;
+  }
+
+  .burger {
+    display: block;
+  }
+}
