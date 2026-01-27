@@ -57,6 +57,7 @@ CREATE TABLE stage (
   date_debut_stage DATE NOT NULL,
   duree_jours_stage INT NOT NULL,
   id_national_entreprise INT NOT NULL,
+  description_stage VARCHAR NOT NULL,
   CONSTRAINT stage_pk PRIMARY KEY (id_stage),
   CONSTRAINT stage_entreprise_fk
     FOREIGN KEY (id_national_entreprise)
