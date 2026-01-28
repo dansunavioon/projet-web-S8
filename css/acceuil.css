@@ -20,3 +20,10 @@
 .nav-link--login:hover {
   background-color: #a9c4ff;
 }
+.page-login-btn{
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  background: red !important;
+  color: white !important;
+}
