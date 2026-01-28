@@ -76,8 +76,8 @@ body {
 .nav-link {
   background-color: var(--blue-pill);
   color: var(--text-dark);
-  padding: 14px 24px;   /* taille du bouton */
-  font-size: 16px;      /* taille du texte */
+  padding: 20px 30px;   /* taille du bouton */
+  font-size: 20px;      /* taille du texte */
   font-weight: 600;
   border-radius: 999px;
   box-shadow: var(--shadow);
