@@ -1,6 +1,6 @@
 /* ===== Variables couleurs (facile à modifier) ===== */
 :root {
-  --blue-bg: #cfe0ff;        /* fond du header (bleu clair) */
+  --blue-bg: #cfe0ff;        
   --blue-pill: #a9c4ff;      /* bouton Contact us */
   --blue-logo: #8fb2ff;      /* rond du logo */
   --text-dark: #0a1a33;
@@ -30,20 +30,20 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background-color: #8fb2ff; /* bleu du header */
+  background-color: #8fb2ff;
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: 0 4px 10px rgba(0,0,0,0.08);
   text-decoration: none;
-  overflow: hidden; /* très important pour le rond */
+  overflow: hidden;
 }
 
-/* Image dans le rond */
 .brand img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* l’image remplit bien le rond */
+  object-fit: cover;
+  display: block;        
 }
 
 /* ===== Menu desktop ===== */
