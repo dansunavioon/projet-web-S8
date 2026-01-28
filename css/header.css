@@ -26,15 +26,15 @@
   justify-content: space-between;
 }
 
-.brand{
-  width: 60px;
-  height: 60px;
+.brand {
+  width: 70px;
+  height: 70px;
+  margin-top: -10px;         /* fait dépasser le logo */
   border-radius: 50%;
   overflow: hidden;
-  padding: 0;
-  background: transparent; /* optionnel si tu ne veux plus voir le bleu derrière */
-  display: block;          /* plus besoin de flex */
+  background-color: #8fb2ff;
 }
+
 
 .brand img{
   width: 100%;
