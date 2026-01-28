@@ -1,0 +1,23 @@
+/* 1) On réserve de la place à droite dans le header UNIQUEMENT sur cette page */
+.site-header {
+  padding-right: 190px; /* ajuste si besoin */
+}
+
+/* 2) Le bouton est "accroché" dans la barre bleue */
+.page-login-btn {
+  position: fixed;          /* suit le header (lock) */
+  top: 50px;                /* milieu si header = 100px */
+  transform: translateY(-50%);
+  right: 30px;              /* marge au bord droit */
+  z-index: 1001;            /* au-dessus du header */
+
+  white-space: nowrap;
+}
+
+/* Style différent (optionnel) */
+.nav-link--login{
+  background-color: #b7cdfc;
+}
+.nav-link--login:hover{
+  background-color: #a9c4ff;
+}
