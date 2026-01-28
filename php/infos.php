@@ -13,7 +13,7 @@
 
 
   <main>
-    <h1>info de matteo : +33 7 67 57 65 26 tout pour 50 €</h1>
+    <h1>voici les informations de contact</h1>
   </main>
 
   <script src="../js/header.js"></script>
