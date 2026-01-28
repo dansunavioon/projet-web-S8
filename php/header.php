@@ -4,13 +4,13 @@
       <img src="/Projet_buildux/projet-web-S8/images/logo_buildux.png" alt="Logo du site">
     </a>
     <nav class="nav">
-      <a href="/html/infos.html" class="nav-link">Contact us</a>
+      <a href="/Projet_buildux/projet-web-S8/html/infos.html" class="nav-link">Contact us</a>
     </nav>
     <button class="burger" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
   </div>
   <nav class="nav-mobile">
-    <a href="/html/infos.html" class="nav-link">Contact us</a>
+    <a href="/Projet_buildux/projet-web-S8/html/infos.html" class="nav-link">Contact us</a>
   </nav>
 </header>
