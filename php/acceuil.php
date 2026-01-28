@@ -9,7 +9,8 @@
 </head>
 <body>
 
- <?php include "../php/header.php"; ?>
+<?php include "../php/header.php"; ?>
+<?php include "../php/login_button_only.php"; ?>
 
 
   <main>
