@@ -1,128 +1,108 @@
-/* ===== Variables couleurs (facile à modifier) ===== */
-:root {
-  --blue-bg: #cfe0ff;        
-  --blue-pill: #a9c4ff;      /* bouton Contact us */
-  --blue-logo: #8fb2ff;      /* rond du logo */
-  --text-dark: #0a1a33;
-  --white: #ffffff;
-  --shadow: 0 4px 10px rgba(0,0,0,0.08);
-}
-/* enlever les marges navigateur */
-html, body {
-  margin: 0;
-  padding: 0;
+:root{
+  --blue-bg:#cfe0ff;
+  --blue-pill:#a9c4ff;
+  --text-dark:#0a1a33;
+  --shadow:0 4px 10px rgba(0,0,0,0.08);
 }
 
-/* header collé aux bords + fixé */
-.site-header {
+html,body{ margin:0; padding:0; }
+
+.site-header{
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;        /* ou width:100% */
-  width: 100%;
-  z-index: 1000;
+  top:0; left:0; right:0;
+  width:100%;
+  z-index:1000;
 
-  background-color: var(--blue-bg);
-  height: 100px;    /* ajuste */
-  padding: 0 20px; /* padding horizontal seulement */
-  display: flex;
-  align-items: center;
+  background: var(--blue-bg);
+  height: 100px;          /* ✅ on ne touche pas */
+  padding: 0 24px;        /* un peu plus clean */
+  display:flex;
+  align-items:center;
 }
 
-/* ton inner garde le centrage */
-.header-inner {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+/* ✅ IMPORTANT : doit matcher la hauteur du header */
+body{ padding-top: 100px; }
+
+.header-inner{
+  width:100%;
+  max-width:1200px;
+  margin:0 auto;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 24px;
 }
 
-/* éviter que le contenu passe sous le header */
-body {
-  padding-top: 64px; /* DOIT = height du header */
+/* --------- Zone gauche (logo + titre) --------- */
+.header-left{
+  display:flex;
+  align-items:center;
+  gap: 14px;
+  min-width: 0;
 }
 
-.brand {
-  width: 100px;
-  height: 100px;
-  margin-top: -20px;
-  margin-bottom: -20px;
-  margin-left: -200px;
+.brand{
+  width: 56px;            /* logo “propre” dans la barre */
+  height: 56px;
   border-radius: 50%;
-  overflow: hidden;
+  overflow:hidden;
+  flex: 0 0 auto;
 }
-
 
 .brand img{
-  width: 100%;
-  height: 100%;
-  display: block;
+  width:100%;
+  height:100%;
+  display:block;
   object-fit: cover;
-  object-position: center;
+  object-position:center;
 }
 
-
-
-/* ===== Menu desktop ===== */
-.nav {
-  display: flex;
-  align-items: center;
-  margin-right: +100px;
-}
-
-/* Bouton Contact us */
-.nav-link {
-  background-color: var(--blue-pill);
+.brand-title{
+  font-size: 20px;
+  font-weight: 700;
   color: var(--text-dark);
-  padding: 14px 24px;   /* taille du bouton */
-  font-size: 16px;      /* taille du texte */
+  white-space: nowrap;
+}
+
+/* --------- Zone droite (boutons) --------- */
+.header-right{
+  display:flex;
+  align-items:center;
+  gap: 16px;              /* espace entre les boutons */
+}
+
+.nav-link{
+  background: var(--blue-pill);
+  color: var(--text-dark);
+  padding: 14px 22px;     /* bouton plus “gros” comme l’image */
+  font-size: 16px;
   font-weight: 600;
   border-radius: 999px;
+  text-decoration:none;
   box-shadow: var(--shadow);
-  transition: background-color 0.2s ease;
+  white-space: nowrap;
 }
 
-.nav-link:hover {
-  background-color: #9dbbff;
+.nav-link:hover{
+  background:#9dbbff;
 }
 
-/* ===== Burger menu ===== */
-.burger {
-  display: none;
-  background: none;
-  border: none;
-  cursor: pointer;
+/* option : 2ème bouton un peu différent (facultatif) */
+.nav-link--secondary{
+  background: #b7cdfc;
 }
 
-.burger span {
-  display: block;
-  width: 24px;
-  height: 2px;
-  background-color: var(--text-dark);
-  margin: 5px 0;
-  border-radius: 2px;
+/* Burger (si tu le gardes) */
+.burger{ display:none; background:none; border:0; cursor:pointer; }
+.burger span{
+  display:block; width:24px; height:2px;
+  background: var(--text-dark);
+  margin:5px 0; border-radius:2px;
 }
 
-/* ===== Menu mobile ===== */
-.nav-mobile {
-  display: none;
-  margin-top: 12px;
-  text-align: right;
-}
-
-.nav-mobile.is-open {
-  display: block;
-}
-
-/* ===== Responsive ===== */
-@media (max-width: 768px) {
-  .nav {
-    display: none;
-  }
-
-  .burger {
-    display: block;
-  }
+@media (max-width: 768px){
+  .header-right{ display:none; }
+  .burger{ display:block; }
+  .brand-title{ font-size: 16px; }
 }
