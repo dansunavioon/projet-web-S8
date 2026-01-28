@@ -27,12 +27,11 @@
 }
 
 .brand {
-  width: 70px;
-  height: 70px;
+  width: 80px;
+  height: 80px;
   margin-top: -10px;         /* fait dépasser le logo */
   border-radius: 50%;
   overflow: hidden;
-  background-color: #8fb2ff;
 }
 
 
