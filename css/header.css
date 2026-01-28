@@ -26,26 +26,24 @@
   justify-content: space-between;
 }
 
-.brand {
+.brand{
   width: 46px;
   height: 46px;
   border-radius: 50%;
-  background-color: #8fb2ff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-  text-decoration: none;
   overflow: hidden;
+  padding: 0;
+  background: transparent; /* optionnel si tu ne veux plus voir le bleu derrière */
+  display: block;          /* plus besoin de flex */
 }
 
-.brand img {
+.brand img{
   width: 100%;
   height: 100%;
-  object-fit: cover;   
-  padding: 0;         
   display: block;
+  object-fit: cover;
+  object-position: center;
 }
+
 
 
 /* ===== Menu desktop ===== */
