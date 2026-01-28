@@ -47,9 +47,9 @@ body {
 .brand {
   width: 100px;
   height: 100px;
-  margin-top: -40px;
+  margin-top: -20px;
   margin-bottom: -20px;
-   margin-left: -20px;
+  margin-left: -100px;
   border-radius: 50%;
   overflow: hidden;
 }
