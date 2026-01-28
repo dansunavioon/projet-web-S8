@@ -1,25 +1,36 @@
 <?php
-// ----------------------------
+// --------------------------------------------------
+// Affichage des erreurs PHP (DEV uniquement)
+// --------------------------------------------------
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// --------------------------------------------------
 // Connexion à la base de données
-// ----------------------------
+// --------------------------------------------------
 $host = "localhost";
 $dbname = "buildux";
 $user = "postgres";
 $password = "isen44N";
 
-$pdo = new PDO(
-    "pgsql:host=$host;dbname=$dbname",
-    $user,
-    $password,
-    [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-    ]
-);
+try {
+    $pdo = new PDO(
+        "pgsql:host=$host;dbname=$dbname",
+        $user,
+        $password,
+        [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+        ]
+    );
+} catch (PDOException $e) {
+    die("<p style='color:red'>❌ Erreur de connexion BDD : " . $e->getMessage() . "</p>");
+}
 
-// ----------------------------
+// --------------------------------------------------
 // Requête
-// ----------------------------
+// --------------------------------------------------
 $stmt = $pdo->query("SELECT * FROM pays");
 $pays = $stmt->fetchAll();
 ?>
@@ -35,13 +46,20 @@ $pays = $stmt->fetchAll();
 </head>
 <body>
 
-<?php include "../php/header.php"; ?>
+<?php
+// Sécurisation de l'include
+if (file_exists("../php/header.php")) {
+    include "../php/header.php";
+} else {
+    echo "<p style='color:red'>❌ header.php introuvable</p>";
+}
+?>
 
 <main>
   <h1>Voici les informations de contact</h1>
 
   <!-- TABLEAU -->
-  <table border="1">
+  <table border="1" cellpadding="5">
     <tr>
       <th>Pays</th>
       <th>Capitale</th>
