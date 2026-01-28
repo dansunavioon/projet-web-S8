@@ -7,23 +7,41 @@
   --white: #ffffff;
   --shadow: 0 4px 10px rgba(0,0,0,0.08);
 }
-
-/* ===== Header global ===== */
-.site-header {
-  background-color: var(--blue-bg);
-  padding: 12px 20px;
-  position: sticky;
-  top: 0;
-  z-index: 100;
+/* enlever les marges navigateur */
+html, body {
+  margin: 0;
+  padding: 0;
 }
 
-/* Contenu centré */
+/* header collé aux bords + fixé */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;        /* ou width:100% */
+  width: 100%;
+  z-index: 1000;
+
+  background-color: var(--blue-bg);
+  height: 64px;    /* ajuste */
+  padding: 0 20px; /* padding horizontal seulement */
+  display: flex;
+  align-items: center;
+}
+
+/* ton inner garde le centrage */
 .header-inner {
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+/* éviter que le contenu passe sous le header */
+body {
+  padding-top: 64px; /* DOIT = height du header */
 }
 
 .brand {
