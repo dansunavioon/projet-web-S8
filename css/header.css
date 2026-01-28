@@ -29,7 +29,7 @@
 .brand {
   width: 80px;
   height: 80px;
-  margin-top: -10px;         /* fait dépasser le logo */
+  margin-top: -20px;         /* fait dépasser le logo */
   border-radius: 50%;
   overflow: hidden;
 }
