@@ -23,7 +23,7 @@ html, body {
   z-index: 1000;
 
   background-color: var(--blue-bg);
-  height: 64px;    /* ajuste */
+  height: 100px;    /* ajuste */
   padding: 0 20px; /* padding horizontal seulement */
   display: flex;
   align-items: center;
