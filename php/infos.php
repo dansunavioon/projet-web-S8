@@ -1,3 +1,29 @@
+<?php
+// ----------------------------
+// Connexion à la base de données
+// ----------------------------
+$host = "localhost";
+$dbname = "buildux";
+$user = "postgres";
+$password = "isen44N";
+
+$pdo = new PDO(
+    "pgsql:host=$host;dbname=$dbname",
+    $user,
+    $password,
+    [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+    ]
+);
+
+// ----------------------------
+// Requête
+// ----------------------------
+$stmt = $pdo->query("SELECT * FROM pays");
+$pays = $stmt->fetchAll();
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -9,15 +35,32 @@
 </head>
 <body>
 
- <?php include "../php/header.php"; ?>
+<?php include "../php/header.php"; ?>
 
+<main>
+  <h1>Voici les informations de contact</h1>
 
-  <main>
-    <h1>voici les informations de contact</h1>
-  </main>
+  <!-- TABLEAU -->
+  <table border="1">
+    <tr>
+      <th>Pays</th>
+      <th>Capitale</th>
+      <th>Monnaie</th>
+    </tr>
 
-  <script src="../js/header.js"></script>
-  <script src="../js/accueil.js"></script>
+    <?php foreach ($pays as $p): ?>
+      <tr>
+        <td><?= htmlspecialchars($p['nom_pays']) ?></td>
+        <td><?= htmlspecialchars($p['capitale_pays']) ?></td>
+        <td><?= htmlspecialchars($p['monnaie_pays']) ?></td>
+      </tr>
+    <?php endforeach; ?>
+  </table>
+
+</main>
+
+<script src="../js/header.js"></script>
+<script src="../js/accueil.js"></script>
 
 </body>
 </html>
