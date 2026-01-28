@@ -9,9 +9,8 @@
 </head>
 <body>
 
-<?php include "../php/header.php"; ?>
-<?php include "../php/log_in.php"; ?>
-
+  <?php include "../php/header.php"; ?>
+  <?php include "../php/log_in.php"; ?>
 
   <main>
     <h1>Accueil</h1>
