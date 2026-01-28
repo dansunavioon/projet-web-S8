@@ -13,7 +13,7 @@
 
 
   <main>
-    <h1>Accueil</h1>
+    <h1>Accueil 2.0</h1>
   </main>
 
   <script src="../js/header.js"></script>
