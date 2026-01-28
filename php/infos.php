@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>info de matteo : +33 7 67 57 65 26 tout pour 50 €</title>
+  <title>Contact us</title>
 
   <link rel="stylesheet" href="../css/header.css">
   <link rel="stylesheet" href="../css/acceuil.css">
@@ -13,7 +13,7 @@
 
 
   <main>
-    <h1>Accueil</h1>
+    <h1>info de matteo : +33 7 67 57 65 26 tout pour 50 €</h1>
   </main>
 
   <script src="../js/header.js"></script>
