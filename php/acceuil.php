@@ -10,7 +10,7 @@
 <body>
 
 <?php include "../php/header.php"; ?>
-<?php include "../php/login_button_only.php"; ?>
+<?php include "../php/log_in.php"; ?>
 
 
   <main>
