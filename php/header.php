@@ -1,6 +1,6 @@
 <header class="site-header">
   <div class="header-inner">
-    <a href="/php/accueil.php" class="brand">
+    <a href="/projet-web-S8//php/accueil.php" class="brand">
       <img src="/projet-web-S8/images/logo_buildux.png" alt="Logo du site">
     </a>
     <nav class="nav">
