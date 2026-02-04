@@ -33,36 +33,32 @@ body{
   align-items:center;
 }
 
-/* ✅ contenu centré */
 .header-inner{
   width:100%;
   max-width:1200px;
   margin:0 auto;
-
   display:flex;
   align-items:center;
-  justify-content:space-between;
-  gap: 16px;
+  justify-content: space-between; /* logo gauche / liens droite */
+  gap:16px;
 }
 
-/* ✅ LOGO : on enlève les marges négatives qui le faisaient “disparaître” */
 .brand{
-  width: 72px;
-  height: 72px;
-  margin: 0;          /* ✅ enlève les marges négatives */
-  border-radius: 50%;
-  overflow: hidden;
-  flex-shrink: 0;     /* ✅ empêche le logo de se “faire écraser” */
+  width:72px;
+  height:72px;
+  margin:0;
+  flex-shrink:0; /* ✅ empêche le logo de s’écraser/disparaître */
+  border-radius:50%;
+  overflow:hidden;
 }
-
 
 .brand img{
   width:100%;
   height:100%;
   display:block;
   object-fit:cover;
-  object-position:center;
 }
+
 
 /* ✅ menu desktop */
 .nav{
