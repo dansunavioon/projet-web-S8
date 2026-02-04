@@ -152,3 +152,7 @@ body{
     height:56px;
   }
 }
+
+.site-header{
+  outline: 6px solid red !important;
+}
