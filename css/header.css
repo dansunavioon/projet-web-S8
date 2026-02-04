@@ -19,7 +19,7 @@ body{
 
 /* ✅ header fixé */
 .site-header{
-  padding-left: 0; /* 🔥 colle au bord */
+  padding-left: 0; 
   position: fixed;
   top:0;
   left:0;
@@ -28,14 +28,13 @@ body{
 
   background-color: var(--blue-bg);
   height: var(--header-h);
-  padding: 0 20px;
 
   display:flex;
   align-items:center;
 }
 
 .header-inner{
-  padding-left: 0; /* 🔥 aucun décalage */
+  padding-left: 0; 
   width:100%;
   max-width:1200px;
   margin:0 auto;
