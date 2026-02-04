@@ -1,6 +1,6 @@
 :root{
   --blue-bg:#cfe0ff;
-  --blue-pill:red;
+  --blue-pill:#a9c4ff;
   --text-dark:#0a1a33;
   --shadow:0 4px 10px rgba(0,0,0,0.08);
 
@@ -151,8 +151,4 @@ body{
     width:56px;
     height:56px;
   }
-}
-
-.site-header{
-  outline: 6px solid red !important;
 }
