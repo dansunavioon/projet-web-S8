@@ -39,8 +39,8 @@ body{
 }
 
 .brand{
-  width:120px;       
-  height:120px;
+  width:140px;       
+  height:140px;
   margin:0;
   padding:0;
   display:flex;
@@ -155,10 +155,12 @@ body{
 }
 
 .brand-text{
-  justify-self: center;   /* 🔥 centre dans la colonne centrale */
-  font-size:20px;
-  font-weight:700;
+  justify-self: center;
+  font-size: 24px;        /* 🔥 plus grand */
+  font-weight: 800;       /* 🔥 plus gras */
+  letter-spacing: 0.5px; /* 🔥 texte plus “large” visuellement */
   color: var(--text-dark);
   white-space: nowrap;
 }
+
 
