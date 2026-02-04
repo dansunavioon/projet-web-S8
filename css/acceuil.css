@@ -3,9 +3,9 @@
 }
 
 .home-layout{
-  width: 100%;
+  width: 90%;
   max-width: none;
-  margin: 0 auto;
+  margin: 0;
   padding: 20px;
   display: grid;
   grid-template-columns: 260px 1fr;
