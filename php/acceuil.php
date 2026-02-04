@@ -2,10 +2,10 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Accueil test</title>
+  <title>Accueil </title>
 
-  <link rel="stylesheet" href="../css/header.css">
   <link rel="stylesheet" href="../css/acceuil.css">
+  <link rel="stylesheet" href="../css/header.css">
 </head>
 <body>
 
@@ -13,7 +13,7 @@
   <?php include "../php/log_in.php"; ?>
 
   <main>
-    <h1>Accueil test</h1>
+    <h1>Accueil </h1>
   </main>
 
   <script src="../js/header.js"></script>

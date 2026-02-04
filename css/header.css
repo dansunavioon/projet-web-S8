@@ -1,7 +1,7 @@
 :root{
   --blue-bg:#cfe0ff;
-  --blue-pill:#a9c4ff;
-  --text-dark: red;
+  --blue-pill:red;
+  --text-dark:#0a1a33;
   --shadow:0 4px 10px rgba(0,0,0,0.08);
 
   --header-h: 100px; /* ✅ hauteur officielle du header */
