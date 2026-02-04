@@ -47,14 +47,14 @@ body{
 
 /* ✅ LOGO : on enlève les marges négatives qui le faisaient “disparaître” */
 .brand{
-  width:72px;
-  height:72px;
-  border-radius:50%;
-  overflow:hidden;
-
-  margin:0;           /* ✅ au lieu de -200px */
-  flex-shrink:0;      /* ✅ empêche le logo de rétrécir/disparaître */
+  width: 72px;
+  height: 72px;
+  margin: 0;          /* ✅ enlève les marges négatives */
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;     /* ✅ empêche le logo de se “faire écraser” */
 }
+
 
 .brand img{
   width:100%;
@@ -69,7 +69,7 @@ body{
   display:flex;
   align-items:center;
   gap: 14px;
-  margin:0; /* ✅ enlève margin-right:+100px */
+  margin:0;
 }
 
 /* ✅ bouton style “Contact us” */
@@ -121,12 +121,20 @@ body{
   padding:12px;
   border-radius:16px;
   box-shadow: var(--shadow);
-  min-width: 220px;
+  min-width:220px;
+  text-align:right;
 }
 
 .nav-mobile.is-open{
   display:block;
 }
+
+.nav-mobile .nav-link{
+  display:block;
+  margin:8px 0;
+  text-align:right;
+}
+
 
 .nav-mobile .nav-link{
   display:block;
