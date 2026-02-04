@@ -36,11 +36,12 @@ body{
   align-items:center;
   justify-content: space-between; 
   gap:16px;
+  grid-template-columns: auto 3fr auto;
 }
 
 .brand{
-  width:140px;       
-  height:140px;
+  width:130px;       
+  height:130px;
   margin:0;
   padding:0;
   display:flex;
@@ -156,11 +157,13 @@ body{
 
 .brand-text{
   justify-self: center;
-  font-size: 24px;        /* 🔥 plus grand */
-  font-weight: 800;       /* 🔥 plus gras */
-  letter-spacing: 0.5px; /* 🔥 texte plus “large” visuellement */
+  font-family: "Poppins", system-ui, sans-serif;
+  font-size: 30px;        /* 🔥 beaucoup plus gros */
+  font-weight: 900;       /* 🔥 très gras */
+  letter-spacing: 1.2px;  /* 🔥 effet large / premium */
   color: var(--text-dark);
   white-space: nowrap;
 }
+
 
 
