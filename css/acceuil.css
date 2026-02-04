@@ -5,24 +5,13 @@
 .home-layout{
   width: 100%;
   max-width: none;
-  margin: 0 auto;
-  padding-left: 40px;
-  padding-right: 40px;
+  margin: 0;
+  padding: 20px;
   display: grid;
   grid-template-columns: 260px 1fr;
   gap: 22px;
   align-items: stretch;
 }
-
-
-@media (max-width: 900px){
-  .home-layout{
-    grid-template-columns: 1fr;
-    padding: 12px 16px;
-    gap: 14px;
-  }
-}
-
 
 .panel{
   background: #cfe0ff;
