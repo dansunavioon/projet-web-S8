@@ -73,8 +73,8 @@ body{
   justify-content:center;
   background-color: var(--blue-pill);
   color: var(--text-dark);
-  padding: 18px 28px;    
-  font-size: 20px;       
+  padding: 22px 35px;    
+  font-size: 22px;       
   font-weight: 700;       
   border-radius: 999px;
   box-shadow: var(--shadow);
