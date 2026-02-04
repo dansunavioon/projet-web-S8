@@ -157,3 +157,16 @@ body{
     height:56px;
   }
 }
+
+.brand-group{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.brand-text{
+  font-size:20px;
+  font-weight:700;
+  color: var(--text-dark);
+  white-space: nowrap;
+}
