@@ -37,6 +37,6 @@
   </main>
 
   <script src="../js/header.js"></script>
-  <script src="../js/accueil.js"></script>
+  <script src="../js/acceuil.js"></script>
 </body>
 </html>
