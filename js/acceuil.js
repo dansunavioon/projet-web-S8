@@ -111,7 +111,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       // 1) Entreprises filtrées par company + country (comme avant)
-      const entUrl = `../php/search_entreprise.php?company=${encodeURIComponent(company)}&country=${encodeURIComponent(country)}`;
+    const entUrl = `../php/search_entreprise.php?job=${encodeURIComponent(job)}&company=${encodeURIComponent(company)}&country=${encodeURIComponent(country)}`;
       // 2) Stages filtrés par job + company + country
       const staUrl = `../php/search_stage.php?job=${encodeURIComponent(job)}&company=${encodeURIComponent(company)}&country=${encodeURIComponent(country)}`;
 

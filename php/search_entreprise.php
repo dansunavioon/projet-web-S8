@@ -25,33 +25,46 @@ try {
   exit;
 }
 
-// ⚠️ on sépare les filtres
+$job     = trim($_GET["job"] ?? "");       // ✅ nouveau
 $company = trim($_GET["company"] ?? "");
 $country = trim($_GET["country"] ?? "");
 
-$sql = "
-  SELECT nom_entreprise, secteur_activite_entreprise, nom_pays
-  FROM entreprise
-  WHERE 1=1
-";
+// Si job est rempli, on joint stage pour filtrer sur description_stage
+if ($job !== "") {
+  $sql = "
+    SELECT DISTINCT
+      e.nom_entreprise, e.secteur_activite_entreprise, e.nom_pays
+    FROM entreprise e
+    JOIN stage s ON s.id_national_entreprise = e.id_national_entreprise
+    WHERE 1=1
+  ";
+} else {
+  $sql = "
+    SELECT
+      e.nom_entreprise, e.secteur_activite_entreprise, e.nom_pays
+    FROM entreprise e
+    WHERE 1=1
+  ";
+}
+
 $params = [];
 
-// filtre entreprise (nom ou secteur)
+if ($job !== "") {
+  $sql .= " AND s.description_stage ILIKE :job";
+  $params[":job"] = "%$job%";
+}
+
 if ($company !== "") {
-  $sql .= " AND (
-    nom_entreprise ILIKE :company
-    OR secteur_activite_entreprise ILIKE :company
-  )";
+  $sql .= " AND (e.nom_entreprise ILIKE :company OR e.secteur_activite_entreprise ILIKE :company)";
   $params[":company"] = "%$company%";
 }
 
-// filtre pays
 if ($country !== "") {
-  $sql .= " AND nom_pays ILIKE :country";
+  $sql .= " AND e.nom_pays ILIKE :country";
   $params[":country"] = "%$country%";
 }
 
-$sql .= " ORDER BY nom_entreprise LIMIT 50";
+$sql .= " ORDER BY e.nom_entreprise LIMIT 50";
 
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
