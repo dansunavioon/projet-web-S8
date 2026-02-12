@@ -3,10 +3,8 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// IMPORTANT : on renvoie du JSON (pas du HTML)
 header('Content-Type: application/json; charset=utf-8');
 
-// Connexion PostgreSQL (comme ton code)
 $host = "localhost";
 $dbname = "buildux";
 $user = "postgres";
@@ -23,29 +21,52 @@ try {
         ]
     );
 } catch (PDOException $e) {
-    // Renvoie une erreur JSON
     echo json_encode(["error" => "Connexion BDD impossible", "details" => $e->getMessage()]);
     exit;
 }
 
-// Récupère la recherche ?q=...
 $q = trim($_GET["q"] ?? "");
 
-// Requête LIKE (PostgreSQL : ILIKE = insensible à la casse)
+if ($q === "") {
+    echo json_encode(["results" => []]);
+    exit;
+}
+
+
 $sql = "
-    SELECT nom_entreprise, secteur_activite_entreprise, nom_pays
-    FROM entreprise
-    WHERE nom_entreprise ILIKE :q
-       OR secteur_activite_entreprise ILIKE :q
-       OR nom_pays ILIKE :q
-    ORDER BY nom_entreprise
-    LIMIT 50
+SELECT 
+    s.id_stage,
+    s.date_publication_stage,
+    s.date_debut_stage,
+    s.duree_jours_stage,
+    s.description_stage,
+    
+    e.nom_entreprise,
+    e.secteur_activite_entreprise,
+    e.nb_employes_entreprise,
+    
+    p.nom_pays,
+    p.capitale_pays,
+    p.monnaie_pays
+
+FROM stage s
+JOIN entreprise e 
+    ON s.id_national_entreprise = e.id_national_entreprise
+JOIN pays p 
+    ON e.nom_pays = p.nom_pays
+
+WHERE 
+    s.description_stage ILIKE :q
+    OR e.nom_entreprise ILIKE :q
+    OR e.secteur_activite_entreprise ILIKE :q
+    OR p.nom_pays ILIKE :q
+
+ORDER BY s.date_publication_stage DESC
+LIMIT 50
 ";
 
 $stmt = $pdo->prepare($sql);
 $stmt->execute([":q" => "%$q%"]);
+$stages = $stmt->fetchAll();
 
-$entreprise = $stmt->fetchAll();
-
-// Renvoie les résultats
-echo json_encode(["results" => $entreprise], JSON_UNESCAPED_UNICODE);
+echo json_encode(["results" => $stages], JSON_UNESCAPED_UNICODE);
