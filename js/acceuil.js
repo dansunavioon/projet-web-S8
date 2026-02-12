@@ -28,7 +28,6 @@ document.addEventListener("DOMContentLoaded", () => {
         </thead>
         <tbody>
     `;
-
     for (const r of rows) {
       html += `
         <tr>
@@ -38,7 +37,6 @@ document.addEventListener("DOMContentLoaded", () => {
         </tr>
       `;
     }
-
     html += `</tbody></table>`;
     return html;
   }
@@ -57,7 +55,6 @@ document.addEventListener("DOMContentLoaded", () => {
         </thead>
         <tbody>
     `;
-
     for (const r of rows) {
       html += `
         <tr>
@@ -67,7 +64,6 @@ document.addEventListener("DOMContentLoaded", () => {
         </tr>
       `;
     }
-
     html += `</tbody></table>`;
     return html;
   }
@@ -79,54 +75,67 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function updateResults() {
-    const company = companyInput.value.trim();   // ex: "lu"
-    const country = locationInput.value.trim();  // ex: "france"
+    const company = companyInput.value.trim();
+    const countryFilter = locationInput.value.trim();
 
-    // 2 colonnes affichées tout le temps
+    // 2 colonnes TOUJOURS
     resultsEl.innerHTML = `
       <div class="results-grid">
         <div class="results-col">
           <div class="results-col-title">Entreprises</div>
-          <div class="results-col-body"><div class="results-empty">Recherche...</div></div>
+          <div id="entBody" class="results-col-body"><div class="results-empty">Recherche...</div></div>
         </div>
         <div class="results-col">
           <div class="results-col-title">Pays</div>
-          <div class="results-col-body"><div class="results-empty">Recherche...</div></div>
+          <div id="payBody" class="results-col-body"><div class="results-empty">Recherche...</div></div>
         </div>
       </div>
     `;
 
-    const entrepriseBody = resultsEl.querySelectorAll(".results-col-body")[0];
-    const paysBody = resultsEl.querySelectorAll(".results-col-body")[1];
+    const entBody = document.getElementById("entBody");
+    const payBody = document.getElementById("payBody");
 
     try {
-      // Entreprises filtrées par company + country
-      const entUrl = `../php/search_entreprise.php?company=${encodeURIComponent(company)}&country=${encodeURIComponent(country)}`;
+      // 1) Entreprises (filtrées par entreprise + pays saisi)
+      const entUrl = `../php/search_entreprise.php?company=${encodeURIComponent(company)}&country=${encodeURIComponent(countryFilter)}`;
+      const entData = await fetchJSON(entUrl);
+      entBody.innerHTML = tableEntreprises(entData.results);
 
-      // Pays filtrés par country uniquement (si vide => on peut afficher vide)
-      const paysUrl = `../php/search_pays.php?q=${encodeURIComponent(country)}`;
+      // 2) Pays = UNIQUEMENT ceux présents dans les entreprises trouvées
+      const uniq = Array.from(
+        new Set((entData.results || []).map(r => (r.nom_pays || "").trim()).filter(Boolean))
+      );
 
-      const [entData, paysData] = await Promise.all([
-        fetchJSON(entUrl),
-        country ? fetchJSON(paysUrl) : Promise.resolve({ results: [] }),
-      ]);
-
-      entrepriseBody.innerHTML = tableEntreprises(entData.results);
-      paysBody.innerHTML = country ? tablePays(paysData.results) : `<div class="results-empty">Tape un pays</div>`;
+      if (uniq.length > 0) {
+        const names = uniq.join(",");
+        const paysDetailsUrl = `../php/get_pays_details.php?names=${encodeURIComponent(names)}`;
+        const paysData = await fetchJSON(paysDetailsUrl);
+        payBody.innerHTML = tablePays(paysData.results);
+      } else {
+        // Aucune entreprise trouvée :
+        // -> si l'utilisateur a tapé un pays, on affiche les pays correspondants (fallback)
+        if (countryFilter) {
+          const paysData = await fetchJSON(`../php/search_pays.php?q=${encodeURIComponent(countryFilter)}`);
+          payBody.innerHTML = tablePays(paysData.results);
+        } else {
+          // sinon rien
+          payBody.innerHTML = `<div class="results-empty">Aucun pays</div>`;
+        }
+      }
     } catch (e) {
       console.error(e);
-      entrepriseBody.innerHTML = `<div class="results-empty">Erreur</div>`;
-      paysBody.innerHTML = `<div class="results-empty">Erreur</div>`;
+      entBody.innerHTML = `<div class="results-empty">Erreur</div>`;
+      payBody.innerHTML = `<div class="results-empty">Erreur</div>`;
     }
   }
 
-  function debounceUpdate() {
+  function debounce() {
     clearTimeout(timer);
     timer = setTimeout(updateResults, 250);
   }
 
-  companyInput.addEventListener("input", debounceUpdate);
-  locationInput.addEventListener("input", debounceUpdate);
+  companyInput.addEventListener("input", debounce);
+  locationInput.addEventListener("input", debounce);
 
   updateResults();
 });
