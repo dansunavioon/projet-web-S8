@@ -56,6 +56,13 @@
   grid-template-columns: 1.3fr 1fr 1fr;
   gap: 10px;
   box-shadow: inset 0 0 0 2px rgba(255,255,255,0.65);
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden; 
+}
+
+.search-bar > *{
+  min-width: 0;          
 }
 
 .search-input {
@@ -68,6 +75,8 @@
   font-weight: 800;
   color: #0a1a33;
   box-shadow: inset 0 0 0 2px rgba(255,255,255,0.65);
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .search-input::placeholder {
