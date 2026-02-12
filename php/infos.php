@@ -105,6 +105,43 @@
       .contact-actions{ justify-content: stretch; }
       .btn{ width: 100%; }
     }
+
+      html, body{
+        height: 100%;
+        margin: 0;
+      }
+
+      main.home{
+        min-height: calc(100vh - 110px);
+        display: flex;
+        justify-content: center;
+        align-items: stretch;
+        padding-top: 20px; 
+      }
+
+      .contact-layout{
+        width: 100%;
+        max-width: 1100px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .contact-card{
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .contact-card form{
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .contact-field textarea{
+        flex: 1;
+      }
+
   </style>
 </head>
 
