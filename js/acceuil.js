@@ -1,8 +1,6 @@
 const locationInput = document.getElementById("q_location");
 const resultsEl = document.getElementById("results");
 
-let timer = null;
-
 function escapeHtml(str) {
   return String(str ?? "")
     .replaceAll("&", "&amp;")
@@ -13,6 +11,8 @@ function escapeHtml(str) {
 }
 
 function renderTable(rows) {
+  console.log("ROWS:", rows); // 🔍 debug
+
   if (!rows || rows.length === 0) {
     resultsEl.innerHTML = `<div class="results-label">Aucun résultat</div>`;
     return;
@@ -45,25 +45,22 @@ function renderTable(rows) {
 }
 
 async function searchPays() {
-  const q = locationInput?.value.trim() ?? "";
+  const q = locationInput.value.trim();
   resultsEl.innerHTML = `<div class="results-label">Recherche...</div>`;
 
   try {
     const res = await fetch(`../php/search_internships.php?q=${encodeURIComponent(q)}`);
-    if (!res.ok) throw new Error("HTTP " + res.status);
-
     const data = await res.json();
+
+    console.log("DATA:", data); // 🔍 debug
     renderTable(data.results);
   } catch (e) {
     console.error(e);
-    resultsEl.innerHTML = `<div class="results-label">Erreur de recherche</div>`;
+    resultsEl.innerHTML = `<div class="results-label">Erreur</div>`;
   }
 }
 
-function debounceSearch() {
-  clearTimeout(timer);
-  timer = setTimeout(searchPays, 250);
-}
+locationInput.addEventListener("input", searchPays);
 
-locationInput?.addEventListener("input", debounceSearch);
+// affichage au chargement
 searchPays();
