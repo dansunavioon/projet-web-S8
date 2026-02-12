@@ -153,3 +153,15 @@
   background: rgba(255,255,255,0.75);
   backdrop-filter: blur(6px);
 }
+.results-title{
+  margin: 6px 0 10px;
+  font-size: 16px;
+  font-weight: 900;
+  color: #0a1a33;
+}
+
+.results-hint{
+  padding: 10px 12px;
+  font-weight: 800;
+  color: rgba(10,26,51,0.75);
+}
