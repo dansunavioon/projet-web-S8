@@ -21,67 +21,44 @@ document.addEventListener("DOMContentLoaded", () => {
     return res.json();
   }
 
-  function tableEntreprises(rows) {
+  function cardsEntreprises(rows) {
     if (!rows || rows.length === 0) return `<div class="results-empty">Aucune entreprise</div>`;
-    let html = `
-      <table class="results-table">
-        <thead><tr><th>Entreprise</th><th>Secteur</th><th>Pays</th></tr></thead><tbody>
-    `;
-    for (const r of rows) {
-      html += `<tr>
-        <td>${escapeHtml(r.nom_entreprise)}</td>
-        <td>${escapeHtml(r.secteur_activite_entreprise)}</td>
-        <td>${escapeHtml(r.nom_pays)}</td>
-      </tr>`;
-    }
-    html += `</tbody></table>`;
-    return html;
+    
+    return rows.map(r => `
+      <div class="card">
+        <div class="card-title">${escapeHtml(r.nom_entreprise)}</div>
+        <div class="card-text"><strong>Secteur :</strong> ${escapeHtml(r.secteur_activite_entreprise)}</div>
+        <div class="card-text"><strong>Pays :</strong> ${escapeHtml(r.nom_pays)}</div>
+      </div>
+    `).join('');
   }
 
-  function tablePays(rows) {
+  function cardsPays(rows) {
     if (!rows || rows.length === 0) return `<div class="results-empty">Aucun pays</div>`;
-    let html = `
-      <table class="results-table">
-        <thead><tr><th>Pays</th><th>Capitale</th><th>Monnaie</th></tr></thead><tbody>
-    `;
-    for (const r of rows) {
-      html += `<tr>
-        <td>${escapeHtml(r.nom_pays)}</td>
-        <td>${escapeHtml(r.capitale_pays)}</td>
-        <td>${escapeHtml(r.monnaie_pays)}</td>
-      </tr>`;
-    }
-    html += `</tbody></table>`;
-    return html;
+    
+    return rows.map(r => `
+      <div class="card">
+        <div class="card-title">${escapeHtml(r.nom_pays)}</div>
+        <div class="card-text"><strong>Capitale :</strong> ${escapeHtml(r.capitale_pays)}</div>
+        <div class="card-text"><strong>Monnaie :</strong> ${escapeHtml(r.monnaie_pays)}</div>
+      </div>
+    `).join('');
   }
 
-  function tableStages(rows) {
+  function cardsStages(rows) {
     if (!rows || rows.length === 0) return `<div class="results-empty">Aucun stage</div>`;
-    let html = `
-      <table class="results-table">
-        <thead>
-          <tr>
-            <th>Entreprise</th>
-            <th>Pays</th>
-            <th>Début</th>
-            <th>Durée</th>
-            <th>Description</th>
-          </tr>
-        </thead>
-        <tbody>
-    `;
-    for (const r of rows) {
-      html += `<tr>
-        <td>${escapeHtml(r.nom_entreprise)}</td>
-        <td>${escapeHtml(r.nom_pays)}</td>
-        <td>${escapeHtml(r.date_debut_stage)}</td>
-        <td>${escapeHtml(r.duree_jours_stage)} j</td>
-        <td>${escapeHtml(r.description_stage)}</td>
-      </tr>`;
-    }
-    html += `</tbody></table>`;
-    return html;
+    
+    return rows.map(r => `
+      <div class="card">
+        <div class="card-title">${escapeHtml(r.nom_entreprise)}</div>
+        <div class="card-text"><strong>Pays :</strong> ${escapeHtml(r.nom_pays)}</div>
+        <div class="card-text"><strong>Début :</strong> ${escapeHtml(r.date_debut_stage)}</div>
+        <div class="card-text"><strong>Durée :</strong> ${escapeHtml(r.duree_jours_stage)} jours</div>
+        <div class="card-text">${escapeHtml(r.description_stage)}</div>
+      </div>
+    `).join('');
   }
+
 
   async function updateResults() {
     const job = jobInput.value.trim();
@@ -130,8 +107,8 @@ document.addEventListener("DOMContentLoaded", () => {
         fetchJSON(staUrl),
       ]);
 
-      entBody.innerHTML = tableEntreprises(entData.results);
-      staBody.innerHTML = tableStages(staData.results);
+      entBody.innerHTML = cardsEntreprises(entData.results);
+      staBody.innerHTML = cardsStages(staData.results);
 
       // 3) Pays = pays uniques issus des entreprises trouvées (ou des stages si entreprises vides)
       const countriesFromEnt = (entData.results || []).map(r => (r.nom_pays || "").trim()).filter(Boolean);
@@ -142,11 +119,11 @@ document.addEventListener("DOMContentLoaded", () => {
       if (uniq.length > 0) {
         const names = uniq.join(",");
         const paysData = await fetchJSON(`../php/get_pays_details.php?names=${encodeURIComponent(names)}`);
-        payBody.innerHTML = tablePays(paysData.results);
+        payBody.innerHTML = cardsPays(paysData.results);
       } else if (country) {
         // fallback si aucun résultat mais l'user tape un pays
         const paysData = await fetchJSON(`../php/search_pays.php?q=${encodeURIComponent(country)}`);
-        payBody.innerHTML = tablePays(paysData.results);
+        payBody.innerHTML = cardsPays(paysData.results);
       } else {
         payBody.innerHTML = `<div class="results-empty">Aucun pays</div>`;
       }
