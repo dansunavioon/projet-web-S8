@@ -142,6 +142,23 @@
         flex: 1;
       }
 
+      .contact-card form{
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .contact-grid{
+        flex-shrink: 0;
+      }
+
+      .contact-field textarea{
+        flex: 1;                 
+        min-height: 220px;       
+        resize: vertical;
+      }
+
+
   </style>
 </head>
 
