@@ -89,25 +89,35 @@ document.addEventListener("DOMContentLoaded", () => {
     const country = locationInput.value.trim();
 
     resultsEl.innerHTML = `
-      <div class="results-grid-3">
-        <div class="results-col">
-          <div class="results-col-title">Entreprises</div>
-          <div id="entBody" class="results-col-body"><div class="results-empty">Recherche...</div></div>
-        </div>
-        <div class="results-col">
-          <div class="results-col-title">Pays</div>
-          <div id="payBody" class="results-col-body"><div class="results-empty">Recherche...</div></div>
-        </div>
-        <div class="results-col">
-          <div class="results-col-title">Stages</div>
-          <div id="staBody" class="results-col-body"><div class="results-empty">Recherche...</div></div>
-        </div>
-      </div>
-    `;
+  <div class="results-grid-3">
 
+    <div class="results-col">
+      <div class="results-col-title">Stages</div>
+      <div id="staBody" class="results-col-body">
+        <div class="results-empty">Recherche...</div>
+      </div>
+    </div>
+
+    <div class="results-col">
+      <div class="results-col-title">Entreprises</div>
+      <div id="entBody" class="results-col-body">
+        <div class="results-empty">Recherche...</div>
+      </div>
+    </div>
+
+    <div class="results-col">
+      <div class="results-col-title">Pays</div>
+      <div id="payBody" class="results-col-body">
+        <div class="results-empty">Recherche...</div>
+      </div>
+    </div>
+
+  </div>
+`;
+
+    const staBody = document.getElementById("staBody");
     const entBody = document.getElementById("entBody");
     const payBody = document.getElementById("payBody");
-    const staBody = document.getElementById("staBody");
 
     try {
       // 1) Entreprises filtrées par company + country (comme avant)
