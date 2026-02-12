@@ -22,13 +22,15 @@
         <h1 class="search-title">Search for an internship</h1>
 
         <div class="search-bar">
-          <div class="search-pill">Métier / Mots clés</div>
-          <div class="search-pill">Entreprise</div>
-          <div class="search-pill">Localisation</div>
+          <input id="q_job" class="search-input" type="text" placeholder="Métier / Mots clés">
+          <input id="q_company" class="search-input" type="text" placeholder="Entreprise">
+          <input id="q_location" class="search-input" type="text" placeholder="Localisation (pays/ville)">
         </div>
 
         <div class="results-box">
-          <div class="results-label">results</div>
+          <div id="results" class="results-content">
+            <div class="results-label">results</div>
+          </div>
         </div>
       </section>
     </div>
@@ -36,6 +38,5 @@
 
   <script src="../js/header.js"></script>
   <script src="../js/accueil.js"></script>
-
 </body>
 </html>
