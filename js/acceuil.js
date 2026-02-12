@@ -14,12 +14,10 @@ document.addEventListener("DOMContentLoaded", () => {
       .replaceAll("'", "&#039;");
   }
 
-  function renderEntreprises(rows, q) {
-    if (!q) return `<div class="results-hint">Tape dans “Entreprise” pour rechercher des entreprises.</div>`;
-    if (!rows || rows.length === 0) return `<div class="results-hint">Aucune entreprise trouvée.</div>`;
+  function tableEntreprises(rows) {
+    if (!rows || rows.length === 0) return `<div class="results-empty">Aucune entreprise</div>`;
 
     let html = `
-      <h3 class="results-title">Entreprises</h3>
       <table class="results-table">
         <thead>
           <tr>
@@ -45,12 +43,10 @@ document.addEventListener("DOMContentLoaded", () => {
     return html;
   }
 
-  function renderPays(rows, q) {
-    if (!q) return `<div class="results-hint">Tape dans “Localisation” pour rechercher des pays.</div>`;
-    if (!rows || rows.length === 0) return `<div class="results-hint">Aucun pays trouvé.</div>`;
+  function tablePays(rows) {
+    if (!rows || rows.length === 0) return `<div class="results-empty">Aucun pays</div>`;
 
     let html = `
-      <h3 class="results-title">Pays</h3>
       <table class="results-table">
         <thead>
           <tr>
@@ -83,41 +79,44 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function updateResults() {
-    const qEntreprise = companyInput.value.trim();
-    const qPays = locationInput.value.trim();
+    const company = companyInput.value.trim();   // ex: "lu"
+    const country = locationInput.value.trim();  // ex: "france"
 
-    // petit loader seulement si au moins un champ est rempli
-    if (qEntreprise || qPays) {
-      resultsEl.innerHTML = `<div class="results-label">Recherche...</div>`;
-    } else {
-      resultsEl.innerHTML = `
-        ${renderEntreprises([], "")}
-        <div style="height:14px"></div>
-        ${renderPays([], "")}
-      `;
-      return;
-    }
+    // 2 colonnes affichées tout le temps
+    resultsEl.innerHTML = `
+      <div class="results-grid">
+        <div class="results-col">
+          <div class="results-col-title">Entreprises</div>
+          <div class="results-col-body"><div class="results-empty">Recherche...</div></div>
+        </div>
+        <div class="results-col">
+          <div class="results-col-title">Pays</div>
+          <div class="results-col-body"><div class="results-empty">Recherche...</div></div>
+        </div>
+      </div>
+    `;
+
+    const entrepriseBody = resultsEl.querySelectorAll(".results-col-body")[0];
+    const paysBody = resultsEl.querySelectorAll(".results-col-body")[1];
 
     try {
-      // On appelle les deux endpoints, mais seulement si le champ correspondant est rempli
-      const [entrepriseData, paysData] = await Promise.all([
-        qEntreprise
-          ? fetchJSON(`../php/search_entreprise.php?q=${encodeURIComponent(qEntreprise)}`)
-          : Promise.resolve({ results: [] }),
+      // Entreprises filtrées par company + country
+      const entUrl = `../php/search_entreprise.php?company=${encodeURIComponent(company)}&country=${encodeURIComponent(country)}`;
 
-        qPays
-          ? fetchJSON(`../php/search_pays.php?q=${encodeURIComponent(qPays)}`)
-          : Promise.resolve({ results: [] }),
+      // Pays filtrés par country uniquement (si vide => on peut afficher vide)
+      const paysUrl = `../php/search_pays.php?q=${encodeURIComponent(country)}`;
+
+      const [entData, paysData] = await Promise.all([
+        fetchJSON(entUrl),
+        country ? fetchJSON(paysUrl) : Promise.resolve({ results: [] }),
       ]);
 
-      resultsEl.innerHTML = `
-        ${renderEntreprises(entrepriseData.results, qEntreprise)}
-        <div style="height:14px"></div>
-        ${renderPays(paysData.results, qPays)}
-      `;
+      entrepriseBody.innerHTML = tableEntreprises(entData.results);
+      paysBody.innerHTML = country ? tablePays(paysData.results) : `<div class="results-empty">Tape un pays</div>`;
     } catch (e) {
       console.error(e);
-      resultsEl.innerHTML = `<div class="results-label">Erreur</div>`;
+      entrepriseBody.innerHTML = `<div class="results-empty">Erreur</div>`;
+      paysBody.innerHTML = `<div class="results-empty">Erreur</div>`;
     }
   }
 
@@ -129,6 +128,5 @@ document.addEventListener("DOMContentLoaded", () => {
   companyInput.addEventListener("input", debounceUpdate);
   locationInput.addEventListener("input", debounceUpdate);
 
-  // affichage au chargement
   updateResults();
 });
