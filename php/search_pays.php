@@ -3,10 +3,8 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// IMPORTANT : on renvoie du JSON (pas du HTML)
 header('Content-Type: application/json; charset=utf-8');
 
-// Connexion PostgreSQL (comme ton code)
 $host = "localhost";
 $dbname = "buildux";
 $user = "postgres";
@@ -23,29 +21,49 @@ try {
         ]
     );
 } catch (PDOException $e) {
-    // Renvoie une erreur JSON
     echo json_encode(["error" => "Connexion BDD impossible", "details" => $e->getMessage()]);
     exit;
 }
 
-// Récupère la recherche ?q=...
 $q = trim($_GET["q"] ?? "");
 
-// Requête LIKE (PostgreSQL : ILIKE = insensible à la casse)
-$sql = "
+// Si vide -> renvoyer rien (ou renvoyer 50 pays si tu préfères)
+if ($q === "") {
+    echo json_encode(["results" => []], JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
+/*
+  1) Recherche stricte : nom_pays commence par q
+     ex: q="f" -> France, Finlande...
+*/
+$sqlStarts = "
     SELECT nom_pays, capitale_pays, monnaie_pays
     FROM pays
-    WHERE nom_pays ILIKE :q
-       OR capitale_pays ILIKE :q
-       OR monnaie_pays ILIKE :q
+    WHERE nom_pays ILIKE :starts
     ORDER BY nom_pays
     LIMIT 50
 ";
 
-$stmt = $pdo->prepare($sql);
-$stmt->execute([":q" => "%$q%"]);
-
+$stmt = $pdo->prepare($sqlStarts);
+$stmt->execute([":starts" => $q . "%"]);
 $pays = $stmt->fetchAll();
 
-// Renvoie les résultats
+// 2) Si aucun résultat, fallback sur recherche large (ton ancienne logique)
+if (count($pays) === 0) {
+    $sqlWide = "
+        SELECT nom_pays, capitale_pays, monnaie_pays
+        FROM pays
+        WHERE nom_pays ILIKE :q
+           OR capitale_pays ILIKE :q
+           OR monnaie_pays ILIKE :q
+        ORDER BY nom_pays
+        LIMIT 50
+    ";
+
+    $stmt = $pdo->prepare($sqlWide);
+    $stmt->execute([":q" => "%$q%"]);
+    $pays = $stmt->fetchAll();
+}
+
 echo json_encode(["results" => $pays], JSON_UNESCAPED_UNICODE);
