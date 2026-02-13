@@ -1,13 +1,13 @@
 <?php
 session_start();
-require __DIR__ . "/db.php";
+require __DIR__ . "/db.php"; // $pdo is defined here
 
-if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+if ($_SERVER["REQUEST_METHOD"] !== "POST") { // Only allow POST requests
   header("Location: ../pages/login.php");
   exit;
 }
 
-$name = trim($_POST["name"] ?? "");
+$name = trim($_POST["name"] ?? ""); // Get the name from POST data, default to empty string if not set
 $email = trim($_POST["email"] ?? "");
 $pass = trim($_POST["password"] ?? "");
 $birth = trim($_POST["birth"] ?? "");

@@ -1,11 +1,11 @@
 <?php
 session_start();
 if (!empty($_SESSION["user"])) {
-  header("Location: acceuil.php");
+  header("Location: acceuil.php"); // redirect to home page if already logged in
   exit;
 }
 
-$err = $_GET["err"] ?? "";
+$err = $_GET["err"] ?? ""; // get error code from query parameter, default to empty string if not set
 function errText($err){
   return match($err){
     "missing" => "Remplis tous les champs.",

@@ -16,8 +16,8 @@ try {
     $user,
     $password,
     [
-      PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-      PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+      PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, // show errors
+      PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC // fetch as associative array
     ]
   );
 } catch (PDOException $e) {
@@ -25,7 +25,7 @@ try {
   exit;
 }
 
-$job     = trim($_GET["job"] ?? "");       
+$job     = trim($_GET["job"] ?? "");       // search in internship description
 $company = trim($_GET["company"] ?? "");
 $country = trim($_GET["country"] ?? "");
 
