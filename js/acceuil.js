@@ -1,8 +1,8 @@
 const advState = {
-  duration: null, 
-  sector: null,  
-  start: null,   
-  size: null    
+  duration: null, // short | standard | long | xl
+  sector: null,   // ex: "Informatique"
+  start: null,    // soon | mid | later
+  size: null      // small | pme | big
 };
 
 function applyChipUI() {
@@ -15,11 +15,12 @@ function applyChipUI() {
 
 function bindAdvancedFilters(updateResults) {
   document.querySelectorAll(".chip[data-key]").forEach(btn => {
-    btn.addEventListener("click", () => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault(); // ✅ évite tout submit/reload
       const k = btn.dataset.key;
       const v = btn.dataset.val;
 
-      advState[k] = advState[k] === v ? null : v;
+      advState[k] = advState[k] === v ? null : v; // toggle
       applyChipUI();
       updateResults();
     });
@@ -27,7 +28,8 @@ function bindAdvancedFilters(updateResults) {
 
   const reset = document.getElementById("advReset");
   if (reset) {
-    reset.addEventListener("click", () => {
+    reset.addEventListener("click", (e) => {
+      e.preventDefault();
       advState.duration = null;
       advState.sector = null;
       advState.start = null;
@@ -40,14 +42,12 @@ function bindAdvancedFilters(updateResults) {
 
 
 document.addEventListener("DOMContentLoaded", () => {
-
   const jobInput = document.getElementById("q_job");
   const companyInput = document.getElementById("q_company");
   const locationInput = document.getElementById("q_location");
   const resultsEl = document.getElementById("results");
 
   let timer = null;
-
 
   function escapeHtml(str) {
     return String(str ?? "")
@@ -65,9 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function cardsStages(rows) {
-    if (!rows || rows.length === 0)
-      return `<div class="results-empty">Aucun stage</div>`;
-
+    if (!rows || rows.length === 0) return `<div class="results-empty">Aucun stage</div>`;
     return rows.map(r => `
       <div class="card">
         <div class="card-title">${escapeHtml(r.nom_entreprise)}</div>
@@ -80,9 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function cardsEntreprises(rows) {
-    if (!rows || rows.length === 0)
-      return `<div class="results-empty">Aucune entreprise</div>`;
-
+    if (!rows || rows.length === 0) return `<div class="results-empty">Aucune entreprise</div>`;
     return rows.map(r => `
       <div class="card">
         <div class="card-title">${escapeHtml(r.nom_entreprise)}</div>
@@ -93,9 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function cardsPays(rows) {
-    if (!rows || rows.length === 0)
-      return `<div class="results-empty">Aucun pays</div>`;
-
+    if (!rows || rows.length === 0) return `<div class="results-empty">Aucun pays</div>`;
     return rows.map(r => `
       <div class="card">
         <div class="card-title">${escapeHtml(r.nom_pays)}</div>
@@ -105,9 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
     `).join("");
   }
 
-  
   async function updateResults() {
-
     const job = jobInput.value.trim();
     const company = companyInput.value.trim();
     const country = locationInput.value.trim();
@@ -163,14 +155,15 @@ document.addEventListener("DOMContentLoaded", () => {
       entBody.innerHTML = cardsEntreprises(entData.results);
 
       const countries = new Set();
-      staData.results?.forEach(r => countries.add(r.nom_pays));
-      entData.results?.forEach(r => countries.add(r.nom_pays));
+      (staData.results || []).forEach(r => (r.nom_pays ? countries.add(r.nom_pays.trim()) : null));
+      (entData.results || []).forEach(r => (r.nom_pays ? countries.add(r.nom_pays.trim()) : null));
 
       if (countries.size > 0) {
         const names = Array.from(countries).join(",");
-        const payData = await fetchJSON(
-          `../php/get_pays_details.php?names=${encodeURIComponent(names)}`
-        );
+        const payData = await fetchJSON(`../php/get_pays_details.php?names=${encodeURIComponent(names)}`);
+        payBody.innerHTML = cardsPays(payData.results);
+      } else if (country) {
+        const payData = await fetchJSON(`../php/search_pays.php?q=${encodeURIComponent(country)}`);
         payBody.innerHTML = cardsPays(payData.results);
       } else {
         payBody.innerHTML = `<div class="results-empty">Aucun pays</div>`;
@@ -178,8 +171,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     } catch (e) {
       console.error(e);
-      staBody.innerHTML = entBody.innerHTML = payBody.innerHTML =
-        `<div class="results-empty">Erreur</div>`;
+      staBody.innerHTML = `<div class="results-empty">Erreur</div>`;
+      entBody.innerHTML = `<div class="results-empty">Erreur</div>`;
+      payBody.innerHTML = `<div class="results-empty">Erreur</div>`;
     }
   }
 
