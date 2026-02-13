@@ -1,8 +1,8 @@
 const advState = {
-  duration: null,
-  sector: null,
-  start: null,
-  size: null
+  duration: null, // short|standard|long|xl
+  sector: null,   // ex: Informatique
+  start: null,    // soon|mid|later
+  size: null      // small|pme|big
 };
 
 function applyChipUI() {
@@ -33,23 +33,12 @@ document.addEventListener("DOMContentLoaded", () => {
   async function fetchJSON(url) {
     const res = await fetch(url);
     const txt = await res.text();
-
-    if (!res.ok) {
-      console.error("HTTP ERROR", res.status, url, txt);
-      throw new Error("HTTP " + res.status);
-    }
-
-    try {
-      return JSON.parse(txt);
-    } catch (e) {
-      console.error("JSON ERROR", url, txt.slice(0, 300));
-      throw e;
-    }
+    if (!res.ok) throw new Error("HTTP " + res.status + " " + txt.slice(0, 200));
+    return JSON.parse(txt);
   }
 
   function cardsStages(rows) {
     if (!rows || rows.length === 0) return `<div class="results-empty">Aucun stage</div>`;
-
     return rows.map(r => `
       <div class="card">
         <div class="card-title">${escapeHtml(r.nom_entreprise)}</div>
@@ -57,6 +46,41 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="card-text"><strong>Début :</strong> ${escapeHtml(r.date_debut_stage)}</div>
         <div class="card-text"><strong>Durée :</strong> ${escapeHtml(r.duree_jours_stage)} jours</div>
         <div class="card-text">${escapeHtml(r.description_stage)}</div>
+      </div>
+    `).join("");
+  }
+
+  function cardsEntreprisesFromStages(stageRows) {
+    const uniq = new Map(); // id_entreprise -> data
+    (stageRows || []).forEach(r => {
+      if (!uniq.has(r.id_national_entreprise)) {
+        uniq.set(r.id_national_entreprise, {
+          nom_entreprise: r.nom_entreprise,
+          secteur_activite_entreprise: r.secteur_activite_entreprise,
+          nom_pays: r.nom_pays
+        });
+      }
+    });
+
+    const rows = Array.from(uniq.values());
+    if (rows.length === 0) return `<div class="results-empty">Aucune entreprise</div>`;
+
+    return rows.map(r => `
+      <div class="card">
+        <div class="card-title">${escapeHtml(r.nom_entreprise)}</div>
+        <div class="card-text"><strong>Secteur :</strong> ${escapeHtml(r.secteur_activite_entreprise)}</div>
+        <div class="card-text"><strong>Pays :</strong> ${escapeHtml(r.nom_pays)}</div>
+      </div>
+    `).join("");
+  }
+
+  function cardsPays(rows) {
+    if (!rows || rows.length === 0) return `<div class="results-empty">Aucun pays</div>`;
+    return rows.map(r => `
+      <div class="card">
+        <div class="card-title">${escapeHtml(r.nom_pays)}</div>
+        <div class="card-text"><strong>Capitale :</strong> ${escapeHtml(r.capitale_pays)}</div>
+        <div class="card-text"><strong>Monnaie :</strong> ${escapeHtml(r.monnaie_pays)}</div>
       </div>
     `).join("");
   }
@@ -76,30 +100,21 @@ document.addEventListener("DOMContentLoaded", () => {
       size: advState.size ?? ""
     });
 
-    // DEBUG : tu dois voir duration=short etc quand tu cliques
-    console.log("PARAMS:", params.toString());
-
     resultsEl.innerHTML = `
       <div class="results-grid-3">
         <div class="results-col">
           <div class="results-col-title">Stages</div>
-          <div id="staBody" class="results-col-body">
-            <div class="results-empty">Recherche...</div>
-          </div>
+          <div id="staBody" class="results-col-body"><div class="results-empty">Recherche...</div></div>
         </div>
 
         <div class="results-col">
           <div class="results-col-title">Entreprises</div>
-          <div id="entBody" class="results-col-body">
-            <div class="results-empty">—</div>
-          </div>
+          <div id="entBody" class="results-col-body"><div class="results-empty">Recherche...</div></div>
         </div>
 
         <div class="results-col">
           <div class="results-col-title">Pays</div>
-          <div id="payBody" class="results-col-body">
-            <div class="results-empty">—</div>
-          </div>
+          <div id="payBody" class="results-col-body"><div class="results-empty">Recherche...</div></div>
         </div>
       </div>
     `;
@@ -109,48 +124,23 @@ document.addEventListener("DOMContentLoaded", () => {
     const payBody = document.getElementById("payBody");
 
     try {
+      // ✅ Une seule requête : stages filtrés
       const staData = await fetchJSON(`../php/search_stage.php?${params.toString()}`);
       const stageRows = staData.results || [];
 
       staBody.innerHTML = cardsStages(stageRows);
+      entBody.innerHTML = cardsEntreprisesFromStages(stageRows);
 
-      // Entreprises + Pays (connectés aux stages)
-      const uniqEnt = new Map();
-      const uniqPays = new Set();
-
-      stageRows.forEach(r => {
-        uniqPays.add((r.nom_pays || "").trim());
-        uniqEnt.set(r.id_national_entreprise, {
-          nom_entreprise: r.nom_entreprise,
-          secteur_activite_entreprise: r.secteur_activite_entreprise,
-          nom_pays: r.nom_pays
-        });
-      });
-
-      const entRows = Array.from(uniqEnt.values()).filter(Boolean);
-      entBody.innerHTML = entRows.length
-        ? entRows.map(r => `
-            <div class="card">
-              <div class="card-title">${escapeHtml(r.nom_entreprise)}</div>
-              <div class="card-text"><strong>Secteur :</strong> ${escapeHtml(r.secteur_activite_entreprise)}</div>
-              <div class="card-text"><strong>Pays :</strong> ${escapeHtml(r.nom_pays)}</div>
-            </div>
-          `).join("")
-        : `<div class="results-empty">Aucune entreprise</div>`;
-
-      const countries = Array.from(uniqPays).filter(Boolean);
+      // Pays uniques issus des stages
+      const countries = Array.from(new Set(
+        stageRows.map(r => (r.nom_pays || "").trim()).filter(Boolean)
+      ));
 
       if (countries.length > 0) {
-        const payData = await fetchJSON(`../php/get_pays_details.php?names=${encodeURIComponent(countries.join(","))}`);
-        payBody.innerHTML = (payData.results || []).length
-          ? payData.results.map(p => `
-              <div class="card">
-                <div class="card-title">${escapeHtml(p.nom_pays)}</div>
-                <div class="card-text"><strong>Capitale :</strong> ${escapeHtml(p.capitale_pays)}</div>
-                <div class="card-text"><strong>Monnaie :</strong> ${escapeHtml(p.monnaie_pays)}</div>
-              </div>
-            `).join("")
-          : `<div class="results-empty">Aucun pays</div>`;
+        const payData = await fetchJSON(
+          `../php/get_pays_details.php?names=${encodeURIComponent(countries.join(","))}`
+        );
+        payBody.innerHTML = cardsPays(payData.results);
       } else {
         payBody.innerHTML = `<div class="results-empty">Aucun pays</div>`;
       }
@@ -161,25 +151,21 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // ✅ clic chips (delegation : marche toujours)
+  // ✅ Clic chips (delegation)
   document.addEventListener("click", (e) => {
     const btn = e.target.closest(".chip[data-key]");
     if (!btn) return;
 
     e.preventDefault();
-
     const k = btn.dataset.key;
     const v = btn.dataset.val;
 
-    console.log("CLICK CHIP:", k, v);
-
     advState[k] = (advState[k] === v) ? null : v;
-
     applyChipUI();
     updateResults();
   });
 
-  // reset
+  // Reset
   const reset = document.getElementById("advReset");
   if (reset) {
     reset.addEventListener("click", (e) => {
