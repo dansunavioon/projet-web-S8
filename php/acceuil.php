@@ -27,6 +27,7 @@
               <button type="button" class="chip" data-key="duration" data-val="standard">Standard (2–3 mois)</button>
               <button type="button" class="chip" data-key="duration" data-val="long">Long (3–6 mois)</button>
               <button type="button" class="chip" data-key="duration" data-val="xl">Très long (6+ mois)</button>
+              
             </div>
           </div>
 
