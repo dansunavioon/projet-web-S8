@@ -1,8 +1,8 @@
 const advState = {
-  duration: null, // short | standard | long | xl
-  sector: null,   // ex: "Informatique"
-  start: null,    // soon | mid | later
-  size: null      // small | pme | big
+  duration: null,
+  sector: null,
+  start: null,
+  size: null
 };
 
 function applyChipUI() {
@@ -12,34 +12,6 @@ function applyChipUI() {
     btn.classList.toggle("is-active", advState[k] === v);
   });
 }
-
-function bindAdvancedFilters(updateResults) {
-  document.querySelectorAll(".chip[data-key]").forEach(btn => {
-    btn.addEventListener("click", (e) => {
-      e.preventDefault(); // ✅ évite tout submit/reload
-      const k = btn.dataset.key;
-      const v = btn.dataset.val;
-
-      advState[k] = advState[k] === v ? null : v; // toggle
-      applyChipUI();
-      updateResults();
-    });
-  });
-
-  const reset = document.getElementById("advReset");
-  if (reset) {
-    reset.addEventListener("click", (e) => {
-      e.preventDefault();
-      advState.duration = null;
-      advState.sector = null;
-      advState.start = null;
-      advState.size = null;
-      applyChipUI();
-      updateResults();
-    });
-  }
-}
-
 
 document.addEventListener("DOMContentLoaded", () => {
   const jobInput = document.getElementById("q_job");
@@ -60,8 +32,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function fetchJSON(url) {
     const res = await fetch(url);
-    if (!res.ok) throw new Error("HTTP " + res.status);
-    return res.json();
+    const txt = await res.text();
+
+    if (!res.ok) {
+      console.error("HTTP ERROR", res.status, url, txt);
+      throw new Error("HTTP " + res.status);
+    }
+    try {
+      return JSON.parse(txt);
+    } catch (e) {
+      console.error("JSON ERROR", url, txt.slice(0, 300));
+      throw e;
+    }
   }
 
   function cardsStages(rows) {
@@ -116,28 +98,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     resultsEl.innerHTML = `
       <div class="results-grid-3">
-
         <div class="results-col">
           <div class="results-col-title">Stages</div>
-          <div id="staBody" class="results-col-body">
-            <div class="results-empty">Recherche...</div>
-          </div>
+          <div id="staBody" class="results-col-body"><div class="results-empty">Recherche...</div></div>
         </div>
 
         <div class="results-col">
           <div class="results-col-title">Entreprises</div>
-          <div id="entBody" class="results-col-body">
-            <div class="results-empty">Recherche...</div>
-          </div>
+          <div id="entBody" class="results-col-body"><div class="results-empty">Recherche...</div></div>
         </div>
 
         <div class="results-col">
           <div class="results-col-title">Pays</div>
-          <div id="payBody" class="results-col-body">
-            <div class="results-empty">Recherche...</div>
-          </div>
+          <div id="payBody" class="results-col-body"><div class="results-empty">Recherche...</div></div>
         </div>
-
       </div>
     `;
 
@@ -155,15 +129,12 @@ document.addEventListener("DOMContentLoaded", () => {
       entBody.innerHTML = cardsEntreprises(entData.results);
 
       const countries = new Set();
-      (staData.results || []).forEach(r => (r.nom_pays ? countries.add(r.nom_pays.trim()) : null));
-      (entData.results || []).forEach(r => (r.nom_pays ? countries.add(r.nom_pays.trim()) : null));
+      (staData.results || []).forEach(r => r.nom_pays && countries.add(r.nom_pays.trim()));
+      (entData.results || []).forEach(r => r.nom_pays && countries.add(r.nom_pays.trim()));
 
       if (countries.size > 0) {
         const names = Array.from(countries).join(",");
         const payData = await fetchJSON(`../php/get_pays_details.php?names=${encodeURIComponent(names)}`);
-        payBody.innerHTML = cardsPays(payData.results);
-      } else if (country) {
-        const payData = await fetchJSON(`../php/search_pays.php?q=${encodeURIComponent(country)}`);
         payBody.innerHTML = cardsPays(payData.results);
       } else {
         payBody.innerHTML = `<div class="results-empty">Aucun pays</div>`;
@@ -171,10 +142,38 @@ document.addEventListener("DOMContentLoaded", () => {
 
     } catch (e) {
       console.error(e);
-      staBody.innerHTML = `<div class="results-empty">Erreur</div>`;
-      entBody.innerHTML = `<div class="results-empty">Erreur</div>`;
-      payBody.innerHTML = `<div class="results-empty">Erreur</div>`;
+      staBody.innerHTML = entBody.innerHTML = payBody.innerHTML = `<div class="results-empty">Erreur</div>`;
     }
+  }
+
+  // ✅ EVENT DELEGATION : fonctionne dans tous les cas
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest(".chip[data-key]");
+    if (!btn) return;
+
+    e.preventDefault();
+    const k = btn.dataset.key;
+    const v = btn.dataset.val;
+
+    console.log("CLICK CHIP", k, v); // ✅ tu dois voir ça dans la console
+
+    advState[k] = (advState[k] === v) ? null : v;
+    applyChipUI();
+    updateResults();
+  });
+
+  // reset
+  const reset = document.getElementById("advReset");
+  if (reset) {
+    reset.addEventListener("click", (e) => {
+      e.preventDefault();
+      advState.duration = null;
+      advState.sector = null;
+      advState.start = null;
+      advState.size = null;
+      applyChipUI();
+      updateResults();
+    });
   }
 
   function debounce() {
@@ -186,7 +185,6 @@ document.addEventListener("DOMContentLoaded", () => {
   companyInput.addEventListener("input", debounce);
   locationInput.addEventListener("input", debounce);
 
-  bindAdvancedFilters(updateResults);
   applyChipUI();
   updateResults();
 });
