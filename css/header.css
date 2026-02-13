@@ -1,3 +1,4 @@
+/* Header Styles */
 :root{
   --blue-bg:#cfe0ff;
   --blue-pill:#a9c4ff;
@@ -6,15 +7,18 @@
   --header-h: 100px; 
 }
 
+/* Reset */
 html, body{
   margin:0;
   padding:0;
 }
 
+/* Body Padding to Account for Fixed Header */
 body{
   padding-top: var(--header-h);
 }
 
+/* Site Header */
 .site-header{
   position: fixed;
   top:0;
@@ -28,7 +32,7 @@ body{
   padding:0;
 }
 
-
+/* Header Inner Container */
 .header-inner{
   padding: 0 32px 0 20px; 
   width:100%;
@@ -39,6 +43,7 @@ body{
   grid-template-columns: auto 3fr auto;
 }
 
+/* Header Inner Container for Mobile */
 .brand{
   width:130px;       
   height:130px;
@@ -52,7 +57,7 @@ body{
   overflow:hidden;
 }
 
-
+/* Brand Image */
 .brand img{
   width:100%;
   height:100%;
@@ -60,14 +65,14 @@ body{
   display:block;
 }
 
-
+/* Navigation */
 .nav{
   justify-self: end;
   display:flex;
   gap:25px;
 }
 
-
+/* Navigation Links */
 .nav-link{
   display:inline-flex;
   align-items:center;
@@ -84,11 +89,12 @@ body{
   transition: background-color 0.2s ease, transform 0.15s ease;
 }
 
-
+/* Navigation Link Hover Effect */
 .nav-link:hover{
   background-color:#9dbbff;
 }
 
+/* Navigation Link Active State */
 .burger{
   display:none;
   background:none;
@@ -97,6 +103,7 @@ body{
   padding:10px;
 }
 
+/* Burger Icon */
 .burger span{
   display:block;
   width:24px;
@@ -106,6 +113,7 @@ body{
   border-radius:2px;
 }
 
+/* Mobile Navigation */
 .nav-mobile{
   display:none;
   position:absolute;
@@ -121,17 +129,19 @@ body{
   text-align:right;
 }
 
+/* Show Mobile Navigation When Open */
 .nav-mobile.is-open{
   display:block;
 }
 
+/* Mobile Navigation Links */
 .nav-mobile .nav-link{
   display:block;
   margin:8px 0;
   text-align:right;
 }
 
-
+/* Mobile Navigation Link Hover Effect */
 .nav-mobile .nav-link{
   display:block;
   text-align:right;
@@ -149,12 +159,14 @@ body{
   }
 }
 
+/* Header Inner Container for Mobile */
 .brand-group{
   display:flex;
   align-items:center;
   gap:12px;
 }
 
+/* Brand Text */
 .brand-text{
   justify-self: center;
   font-family: "Poppins", system-ui, sans-serif;

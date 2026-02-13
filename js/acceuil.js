@@ -1,3 +1,5 @@
+// acceuil.js - Handles the search and filtering logic for the internship listing page
+
 const advState = {
   duration: null, // short|standard|long|xl
   sector: null,   // ex: Informatique
@@ -5,6 +7,7 @@ const advState = {
   size: null      // small|pme|big
 };
 
+// Applies the "is-active" class to chips based on the current advState
 function applyChipUI() {
   document.querySelectorAll(".chip[data-key]").forEach(btn => {
     const k = btn.dataset.key;
@@ -13,6 +16,7 @@ function applyChipUI() {
   });
 }
 
+// Main logic
 document.addEventListener("DOMContentLoaded", () => {
   const jobInput = document.getElementById("q_job");
   const companyInput = document.getElementById("q_company");
@@ -21,6 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let timer = null;
 
+  // Utility function to escape HTML special characters
   function escapeHtml(str) {
     return String(str ?? "")
       .replaceAll("&", "&amp;")
@@ -30,6 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .replaceAll("'", "&#039;");
   }
 
+  // Fetches JSON data from the given URL and handles errors
   async function fetchJSON(url) {
     const res = await fetch(url);
     const txt = await res.text();
@@ -37,6 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return JSON.parse(txt);
   }
 
+  // Generates HTML cards for the given stage rows
   function cardsStages(rows) {
     if (!rows || rows.length === 0) return `<div class="results-empty">Aucun stage</div>`;
     return rows.map(r => `
@@ -50,6 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
     `).join("");
   }
 
+  // Generates HTML cards for unique companies extracted from stage rows
   function cardsEntreprisesFromStages(stageRows) {
     const uniq = new Map(); // id_entreprise -> data
     (stageRows || []).forEach(r => {
@@ -74,6 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
     `).join("");
   }
 
+  // Generates HTML cards for the given country rows
   function cardsPays(rows) {
     if (!rows || rows.length === 0) return `<div class="results-empty">Aucun pays</div>`;
     return rows.map(r => `
@@ -85,6 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
     `).join("");
   }
 
+  // Fetches and updates the results based on current input values and advState
   async function updateResults() {
     const job = jobInput.value.trim();
     const company = companyInput.value.trim();
@@ -149,6 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // Handle clicks on filter chips
   document.addEventListener("click", (e) => {
     const btn = e.target.closest(".chip[data-key]");
     if (!btn) return;
@@ -162,6 +173,7 @@ document.addEventListener("DOMContentLoaded", () => {
     updateResults();
   });
 
+  // Handle click on reset button
   const reset = document.getElementById("advReset");
   if (reset) {
     reset.addEventListener("click", (e) => {
@@ -175,11 +187,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Debounce function to limit the rate of updateResults calls when typing
   function debounce() {
     clearTimeout(timer);
     timer = setTimeout(updateResults, 250);
   }
 
+  // Attach input event listeners to search fields with debounce
   jobInput.addEventListener("input", debounce);
   companyInput.addEventListener("input", debounce);
   locationInput.addEventListener("input", debounce);
