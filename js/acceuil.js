@@ -1,10 +1,53 @@
+const advState = {
+  duration: null, 
+  sector: null,  
+  start: null,   
+  size: null    
+};
+
+function applyChipUI() {
+  document.querySelectorAll(".chip[data-key]").forEach(btn => {
+    const k = btn.dataset.key;
+    const v = btn.dataset.val;
+    btn.classList.toggle("is-active", advState[k] === v);
+  });
+}
+
+function bindAdvancedFilters(updateResults) {
+  document.querySelectorAll(".chip[data-key]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const k = btn.dataset.key;
+      const v = btn.dataset.val;
+
+      advState[k] = advState[k] === v ? null : v;
+      applyChipUI();
+      updateResults();
+    });
+  });
+
+  const reset = document.getElementById("advReset");
+  if (reset) {
+    reset.addEventListener("click", () => {
+      advState.duration = null;
+      advState.sector = null;
+      advState.start = null;
+      advState.size = null;
+      applyChipUI();
+      updateResults();
+    });
+  }
+}
+
+
 document.addEventListener("DOMContentLoaded", () => {
+
   const jobInput = document.getElementById("q_job");
   const companyInput = document.getElementById("q_company");
   const locationInput = document.getElementById("q_location");
   const resultsEl = document.getElementById("results");
 
   let timer = null;
+
 
   function escapeHtml(str) {
     return String(str ?? "")
@@ -21,33 +64,10 @@ document.addEventListener("DOMContentLoaded", () => {
     return res.json();
   }
 
-  function cardsEntreprises(rows) {
-    if (!rows || rows.length === 0) return `<div class="results-empty">Aucune entreprise</div>`;
-    
-    return rows.map(r => `
-      <div class="card">
-        <div class="card-title">${escapeHtml(r.nom_entreprise)}</div>
-        <div class="card-text"><strong>Secteur :</strong> ${escapeHtml(r.secteur_activite_entreprise)}</div>
-        <div class="card-text"><strong>Pays :</strong> ${escapeHtml(r.nom_pays)}</div>
-      </div>
-    `).join('');
-  }
-
-  function cardsPays(rows) {
-    if (!rows || rows.length === 0) return `<div class="results-empty">Aucun pays</div>`;
-    
-    return rows.map(r => `
-      <div class="card">
-        <div class="card-title">${escapeHtml(r.nom_pays)}</div>
-        <div class="card-text"><strong>Capitale :</strong> ${escapeHtml(r.capitale_pays)}</div>
-        <div class="card-text"><strong>Monnaie :</strong> ${escapeHtml(r.monnaie_pays)}</div>
-      </div>
-    `).join('');
-  }
-
   function cardsStages(rows) {
-    if (!rows || rows.length === 0) return `<div class="results-empty">Aucun stage</div>`;
-    
+    if (!rows || rows.length === 0)
+      return `<div class="results-empty">Aucun stage</div>`;
+
     return rows.map(r => `
       <div class="card">
         <div class="card-title">${escapeHtml(r.nom_entreprise)}</div>
@@ -56,82 +76,110 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="card-text"><strong>Durée :</strong> ${escapeHtml(r.duree_jours_stage)} jours</div>
         <div class="card-text">${escapeHtml(r.description_stage)}</div>
       </div>
-    `).join('');
+    `).join("");
   }
 
+  function cardsEntreprises(rows) {
+    if (!rows || rows.length === 0)
+      return `<div class="results-empty">Aucune entreprise</div>`;
 
+    return rows.map(r => `
+      <div class="card">
+        <div class="card-title">${escapeHtml(r.nom_entreprise)}</div>
+        <div class="card-text"><strong>Secteur :</strong> ${escapeHtml(r.secteur_activite_entreprise)}</div>
+        <div class="card-text"><strong>Pays :</strong> ${escapeHtml(r.nom_pays)}</div>
+      </div>
+    `).join("");
+  }
+
+  function cardsPays(rows) {
+    if (!rows || rows.length === 0)
+      return `<div class="results-empty">Aucun pays</div>`;
+
+    return rows.map(r => `
+      <div class="card">
+        <div class="card-title">${escapeHtml(r.nom_pays)}</div>
+        <div class="card-text"><strong>Capitale :</strong> ${escapeHtml(r.capitale_pays)}</div>
+        <div class="card-text"><strong>Monnaie :</strong> ${escapeHtml(r.monnaie_pays)}</div>
+      </div>
+    `).join("");
+  }
+
+  
   async function updateResults() {
+
     const job = jobInput.value.trim();
     const company = companyInput.value.trim();
     const country = locationInput.value.trim();
 
+    const params = new URLSearchParams({
+      job,
+      company,
+      country,
+      duration: advState.duration ?? "",
+      sector: advState.sector ?? "",
+      start: advState.start ?? "",
+      size: advState.size ?? ""
+    });
+
     resultsEl.innerHTML = `
-  <div class="results-grid-3">
+      <div class="results-grid-3">
 
-    <div class="results-col">
-      <div class="results-col-title">Stages</div>
-      <div id="staBody" class="results-col-body">
-        <div class="results-empty">Recherche...</div>
+        <div class="results-col">
+          <div class="results-col-title">Stages</div>
+          <div id="staBody" class="results-col-body">
+            <div class="results-empty">Recherche...</div>
+          </div>
+        </div>
+
+        <div class="results-col">
+          <div class="results-col-title">Entreprises</div>
+          <div id="entBody" class="results-col-body">
+            <div class="results-empty">Recherche...</div>
+          </div>
+        </div>
+
+        <div class="results-col">
+          <div class="results-col-title">Pays</div>
+          <div id="payBody" class="results-col-body">
+            <div class="results-empty">Recherche...</div>
+          </div>
+        </div>
+
       </div>
-    </div>
-
-    <div class="results-col">
-      <div class="results-col-title">Entreprises</div>
-      <div id="entBody" class="results-col-body">
-        <div class="results-empty">Recherche...</div>
-      </div>
-    </div>
-
-    <div class="results-col">
-      <div class="results-col-title">Pays</div>
-      <div id="payBody" class="results-col-body">
-        <div class="results-empty">Recherche...</div>
-      </div>
-    </div>
-
-  </div>
-`;
+    `;
 
     const staBody = document.getElementById("staBody");
     const entBody = document.getElementById("entBody");
     const payBody = document.getElementById("payBody");
 
     try {
-      // 1) Entreprises filtrées par company + country (comme avant)
-    const entUrl = `../php/search_entreprise.php?job=${encodeURIComponent(job)}&company=${encodeURIComponent(company)}&country=${encodeURIComponent(country)}`;
-      // 2) Stages filtrés par job + company + country
-      const staUrl = `../php/search_stage.php?job=${encodeURIComponent(job)}&company=${encodeURIComponent(company)}&country=${encodeURIComponent(country)}`;
-
-      const [entData, staData] = await Promise.all([
-        fetchJSON(entUrl),
-        fetchJSON(staUrl),
+      const [staData, entData] = await Promise.all([
+        fetchJSON(`../php/search_stage.php?${params.toString()}`),
+        fetchJSON(`../php/search_entreprise.php?${params.toString()}`)
       ]);
 
-      entBody.innerHTML = cardsEntreprises(entData.results);
       staBody.innerHTML = cardsStages(staData.results);
+      entBody.innerHTML = cardsEntreprises(entData.results);
 
-      // 3) Pays = pays uniques issus des entreprises trouvées (ou des stages si entreprises vides)
-      const countriesFromEnt = (entData.results || []).map(r => (r.nom_pays || "").trim()).filter(Boolean);
-      const countriesFromSta = (staData.results || []).map(r => (r.nom_pays || "").trim()).filter(Boolean);
+      const countries = new Set();
+      staData.results?.forEach(r => countries.add(r.nom_pays));
+      entData.results?.forEach(r => countries.add(r.nom_pays));
 
-      const uniq = Array.from(new Set([...countriesFromEnt, ...countriesFromSta]));
-
-      if (uniq.length > 0) {
-        const names = uniq.join(",");
-        const paysData = await fetchJSON(`../php/get_pays_details.php?names=${encodeURIComponent(names)}`);
-        payBody.innerHTML = cardsPays(paysData.results);
-      } else if (country) {
-        // fallback si aucun résultat mais l'user tape un pays
-        const paysData = await fetchJSON(`../php/search_pays.php?q=${encodeURIComponent(country)}`);
-        payBody.innerHTML = cardsPays(paysData.results);
+      if (countries.size > 0) {
+        const names = Array.from(countries).join(",");
+        const payData = await fetchJSON(
+          `../php/get_pays_details.php?names=${encodeURIComponent(names)}`
+        );
+        payBody.innerHTML = cardsPays(payData.results);
       } else {
         payBody.innerHTML = `<div class="results-empty">Aucun pays</div>`;
       }
+
     } catch (e) {
       console.error(e);
-      entBody.innerHTML = `<div class="results-empty">Erreur</div>`;
-      payBody.innerHTML = `<div class="results-empty">Erreur</div>`;
-      staBody.innerHTML = `<div class="results-empty">Erreur</div>`;
+      staBody.innerHTML = entBody.innerHTML = payBody.innerHTML =
+        `<div class="results-empty">Erreur</div>`;
     }
   }
 
@@ -144,5 +192,7 @@ document.addEventListener("DOMContentLoaded", () => {
   companyInput.addEventListener("input", debounce);
   locationInput.addEventListener("input", debounce);
 
+  bindAdvancedFilters(updateResults);
+  applyChipUI();
   updateResults();
 });
