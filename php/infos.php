@@ -8,33 +8,34 @@
   <link rel="stylesheet" href="../css/acceuil.css">
 
   <style>
-    .contact-layout{
+    /* Container for the contact section */
+    .contact-layout{   
       max-width: 1000px;
       margin: 0 auto;
       padding: 20px;
     }
-
+    /* Card styling for the contact form and info */
     .contact-card{
       background: rgba(255,255,255,0.55);
       border-radius: 26px;
       padding: 24px;
       box-shadow: inset 0 0 0 2px rgba(255,255,255,0.65);
     }
-
+    /* Title styling */
     .contact-grid{
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 16px;
       margin-top: 18px;
     }
-
+  /* Styling for form fields */
     .contact-field label{
       display: block;
       font-weight: 900;
       color: #0a1a33;
       margin-bottom: 6px;
     }
-
+  /* Styling for input and textarea fields */
     .contact-field input,
     .contact-field textarea{
       width: 100%;
@@ -48,19 +49,19 @@
       box-shadow: inset 0 0 0 2px rgba(255,255,255,0.65);
       box-sizing: border-box;
     }
-
+  /* Specific styling for textarea to allow resizing and set a minimum height */
     .contact-field textarea{
       min-height: 160px;
       resize: vertical;
     }
-
+  /* Container for action buttons */
     .contact-actions{
       margin-top: 18px;
       display: flex;
       gap: 14px;
       justify-content: flex-end;
     }
-
+  /* Styling for buttons */
     .btn{
       border: none;
       cursor: pointer;
@@ -71,18 +72,18 @@
       background: #a9c4ff;
       box-shadow: 0 10px 18px rgba(0,0,0,0.12);
     }
-
+  /* Secondary button styling */
     .btn-secondary{
       background: rgba(255,255,255,0.65);
     }
-
+  /* Container for contact information boxes */
     .contact-info{
       margin-top: 20px;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 12px;
     }
-
+  /* Styling for individual information boxes */
     .info-box{
       background: rgba(255,255,255,0.55);
       border-radius: 18px;
@@ -91,25 +92,25 @@
       font-weight: 800;
       color: #0a1a33;
     }
-
+  /* Styling for the small label inside information boxes */
     .info-box small{
       display: block;
       opacity: 0.7;
       margin-bottom: 4px;
     }
-
+  /* Responsive adjustments for smaller screens */
     @media(max-width: 900px){
       .contact-grid{ grid-template-columns: 1fr; }
       .contact-info{ grid-template-columns: 1fr; }
       .contact-actions{ justify-content: stretch; }
       .btn{ width: 100%; }
     }
-
+  /* Global styles for the page */
       html, body{
         height: 100%;
         margin: 0;
       }
-
+  /* Main container styling to center content and set minimum height */
       main.home{
         min-height: calc(100vh - 110px);
         display: flex;
@@ -117,40 +118,40 @@
         align-items: stretch;
         padding-top: 20px; 
       }
-
+  /* Layout styling for the contact section */
       .contact-layout{
         width: 100%;
         max-width: 1100px;
         display: flex;
         flex-direction: column;
       }
-
+  /* Card styling for the contact form and information */
       .contact-card{
         flex: 1;
         display: flex;
         flex-direction: column;
       }
-
+  /* Styling for the form inside the contact card to allow it to grow and use flex layout */
       .contact-card form{
         flex: 1;
         display: flex;
         flex-direction: column;
       }
-
+  /* Grid layout for the form fields */
       .contact-field textarea{
         flex: 1;
       }
-
+  /* Container for the contact information boxes to prevent shrinking and maintain layout */
       .contact-card form{
         flex: 1;
         display: flex;
         flex-direction: column;
       }
-
+  /* Grid layout for the form fields to allow them to grow and maintain spacing */
       .contact-grid{
         flex-shrink: 0;
       }
-
+  /* Specific styling for textarea to allow it to grow and set a minimum height */
       .contact-field textarea{
         flex: 1;                 
         min-height: 220px;       

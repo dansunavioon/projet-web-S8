@@ -22,8 +22,8 @@
 
           <div class="adv-group">
             <div class="adv-title">Durée</div>
-            <div class="adv-chips">
-              <button type="button" class="chip" data-key="duration" data-val="short">Court (&lt; 2 mois)</button>
+            <div class="adv-chips"> <!-- Chips for duration -->
+              <button type="button" class="chip" data-key="duration" data-val="short">Court (&lt; 2 mois)</button> <!-- Buton for short duration -->
               <button type="button" class="chip" data-key="duration" data-val="standard">Standard (2–3 mois)</button>
               <button type="button" class="chip" data-key="duration" data-val="long">Long (3–6 mois)</button>
               <button type="button" class="chip" data-key="duration" data-val="xl">Très long (6+ mois)</button>
