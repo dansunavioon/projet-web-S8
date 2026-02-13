@@ -54,5 +54,5 @@ $_SESSION["user"] = [
   "email" => $userRow["mail_user"],
 ];
 
-header("Location: ../pages/acceuil.php");
+header("Location: ../php/acceuil.php");
 exit;

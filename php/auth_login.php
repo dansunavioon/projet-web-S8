@@ -36,5 +36,5 @@ $_SESSION["user"] = [
   "email" => $user["mail_user"],
 ];
 
-header("Location: ../pages/acceuil.php");
+header("Location: ../php/acceuil.php");
 exit;
