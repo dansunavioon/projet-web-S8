@@ -4,7 +4,7 @@ error_reporting(E_ALL);
 
 header('Content-Type: application/json; charset=utf-8');
 
-require_once "database.php"; // ← ton PDO
+require_once "db.php"; // ← ton PDO
 
 $job      = trim($_GET['job'] ?? '');
 $company  = trim($_GET['company'] ?? '');
