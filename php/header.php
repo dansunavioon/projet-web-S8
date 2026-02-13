@@ -5,7 +5,6 @@ if (session_status() === PHP_SESSION_NONE) session_start();
 <header class="site-header">
   <div class="header-inner">
 
-    <!-- LOGO + TEXTE -->
     <div class="brand-group">
       <a href="../php/acceuil.php" class="brand">
         <img src="../images/logo_buildux.png" alt="Logo Buildux">
@@ -17,13 +16,11 @@ if (session_status() === PHP_SESSION_NONE) session_start();
       <a href="../php/infos.php" class="nav-link">Contact us</a>
 
       <?php if (!empty($_SESSION["user"])): ?>
-        <!-- ✅ CONNECTÉ : afficher nom + logout -->
         <span class="nav-link nav-link--secondary">
           <?= htmlspecialchars($_SESSION["user"]["name"]) ?>
         </span>
         <a href="../php/auth_logout.php" class="nav-link nav-link--secondary">Logout</a>
       <?php else: ?>
-        <!-- ❌ PAS CONNECTÉ : afficher login -->
         <a href="../pages/login.php" class="nav-link nav-link--secondary">
           Log in / Sign in
         </a>

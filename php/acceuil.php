@@ -70,7 +70,6 @@
         </div>
       </aside>
 
-      <!-- PANEL DROIT -->
       <section class="panel panel-right">
         <h1 class="search-title">Search for an internship</h1>
 

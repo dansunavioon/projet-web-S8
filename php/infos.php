@@ -8,7 +8,6 @@
   <link rel="stylesheet" href="../css/acceuil.css">
 
   <style>
-    /* Layout spécial contact : une seule colonne */
     .contact-layout{
       max-width: 1000px;
       margin: 0 auto;

@@ -124,14 +124,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const payBody = document.getElementById("payBody");
 
     try {
-      // ✅ Une seule requête : stages filtrés
       const staData = await fetchJSON(`../php/search_stage.php?${params.toString()}`);
       const stageRows = staData.results || [];
 
       staBody.innerHTML = cardsStages(stageRows);
       entBody.innerHTML = cardsEntreprisesFromStages(stageRows);
 
-      // Pays uniques issus des stages
       const countries = Array.from(new Set(
         stageRows.map(r => (r.nom_pays || "").trim()).filter(Boolean)
       ));
@@ -151,7 +149,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // ✅ Clic chips (delegation)
   document.addEventListener("click", (e) => {
     const btn = e.target.closest(".chip[data-key]");
     if (!btn) return;
@@ -165,7 +162,6 @@ document.addEventListener("DOMContentLoaded", () => {
     updateResults();
   });
 
-  // Reset
   const reset = document.getElementById("advReset");
   if (reset) {
     reset.addEventListener("click", (e) => {

@@ -25,11 +25,10 @@ try {
   exit;
 }
 
-$job     = trim($_GET["job"] ?? "");       // ✅ nouveau
+$job     = trim($_GET["job"] ?? "");       
 $company = trim($_GET["company"] ?? "");
 $country = trim($_GET["country"] ?? "");
 
-// Si job est rempli, on joint stage pour filtrer sur description_stage
 if ($job !== "") {
   $sql = "
     SELECT DISTINCT

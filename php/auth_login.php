@@ -24,7 +24,6 @@ if (!$user) {
   exit;
 }
 
-// Vérification hash
 if (!password_verify($pass, $user["mdp_user"])) {
   header("Location: ../pages/login.php?err=bad");
   exit;

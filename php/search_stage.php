@@ -4,16 +4,16 @@ error_reporting(E_ALL);
 
 header('Content-Type: application/json; charset=utf-8');
 
-require_once __DIR__ . "/db.php"; // doit créer $pdo (PDO PostgreSQL)
+require_once __DIR__ . "/db.php"; 
 
 $job      = trim($_GET['job'] ?? '');
 $company  = trim($_GET['company'] ?? '');
 $country  = trim($_GET['country'] ?? '');
 
-$duration = trim($_GET['duration'] ?? ''); // short|standard|long|xl
+$duration = trim($_GET['duration'] ?? ''); 
 $sector   = trim($_GET['sector'] ?? '');
-$start    = trim($_GET['start'] ?? '');    // soon|mid|later
-$size     = trim($_GET['size'] ?? '');     // small|pme|big
+$start    = trim($_GET['start'] ?? '');    
+$size     = trim($_GET['size'] ?? '');    
 
 $sql = "
 SELECT
@@ -34,36 +34,30 @@ WHERE 1=1
 
 $params = [];
 
-/* 🔎 Métier/Mots-clés : on cherche dans description */
 if ($job !== '') {
   $sql .= " AND s.description_stage ILIKE :job";
   $params[':job'] = "%$job%";
 }
 
-/* 🏢 Entreprise */
 if ($company !== '') {
   $sql .= " AND e.nom_entreprise ILIKE :company";
   $params[':company'] = "%$company%";
 }
 
-/* 🌍 Pays */
 if ($country !== '') {
   $sql .= " AND e.nom_pays ILIKE :country";
   $params[':country'] = "%$country%";
 }
 
-/* 🧩 Secteur */
 if ($sector !== '') {
   $sql .= " AND e.secteur_activite_entreprise ILIKE :sector";
   $params[':sector'] = "%$sector%";
 }
 
-/* 👥 Taille entreprise */
 if ($size === "small") $sql .= " AND e.nb_employes_entreprise < 300";
 if ($size === "pme")   $sql .= " AND e.nb_employes_entreprise BETWEEN 300 AND 1000";
 if ($size === "big")   $sql .= " AND e.nb_employes_entreprise > 1000";
 
-/* ⏱️ Durée (adaptée à tes données : 60/75/90/120/180) */
 if ($duration === "short") {
   $sql .= " AND s.duree_jours_stage <= 60";
 } elseif ($duration === "standard") {
@@ -74,7 +68,6 @@ if ($duration === "short") {
   $sql .= " AND s.duree_jours_stage > 180";
 }
 
-/* 📅 Début */
 if ($start === "soon") {
   $sql .= " AND s.date_debut_stage <= (CURRENT_DATE + INTERVAL '30 days')";
 } elseif ($start === "mid") {

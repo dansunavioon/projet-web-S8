@@ -27,16 +27,12 @@ try {
 
 $q = trim($_GET["q"] ?? "");
 
-// Si vide -> renvoyer rien (ou renvoyer 50 pays si tu préfères)
 if ($q === "") {
     echo json_encode(["results" => []], JSON_UNESCAPED_UNICODE);
     exit;
 }
 
-/*
-  1) Recherche stricte : nom_pays commence par q
-     ex: q="f" -> France, Finlande...
-*/
+
 $sqlStarts = "
     SELECT nom_pays, capitale_pays, monnaie_pays
     FROM pays
@@ -49,7 +45,6 @@ $stmt = $pdo->prepare($sqlStarts);
 $stmt->execute([":starts" => $q . "%"]);
 $pays = $stmt->fetchAll();
 
-// 2) Si aucun résultat, fallback sur recherche large (ton ancienne logique)
 if (count($pays) === 0) {
     $sqlWide = "
         SELECT nom_pays, capitale_pays, monnaie_pays

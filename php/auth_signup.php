@@ -22,7 +22,6 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
   exit;
 }
 
-// Vérifie si email déjà utilisé
 $stmt = $pdo->prepare("SELECT id_user FROM utilisateur WHERE mail_user = :email");
 $stmt->execute([":email" => $email]);
 if ($stmt->fetch()) {
@@ -30,7 +29,6 @@ if ($stmt->fetch()) {
   exit;
 }
 
-// Hash (mot de passe peut être simple, mais stockage sécurisé)
 $hash = password_hash($pass, PASSWORD_DEFAULT);
 
 $stmt = $pdo->prepare("
@@ -47,7 +45,6 @@ $stmt->execute([
 
 $userRow = $stmt->fetch();
 
-// Connexion automatique après inscription
 $_SESSION["user"] = [
   "id" => $userRow["id_user"],
   "name" => $userRow["nom_user"],
