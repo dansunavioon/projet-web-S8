@@ -58,10 +58,20 @@ document.addEventListener("DOMContentLoaded", () => {
       .replaceAll("'", "&#039;");
   }
 
+
   async function fetchJSON(url) {
     const res = await fetch(url);
-    if (!res.ok) throw new Error("HTTP " + res.status);
-    return res.json();
+    const txt = await res.text(); // <- on lit le texte brut
+    if (!res.ok) {
+      console.error("HTTP ERROR", res.status, url, txt);
+      throw new Error("HTTP " + res.status);
+    }
+    try {
+      return JSON.parse(txt);
+    } catch (e) {
+      console.error("JSON PARSE ERROR", url, txt.slice(0, 300));
+      throw e;
+    }
   }
 
   function cardsStages(rows) {
