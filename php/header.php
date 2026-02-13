@@ -1,5 +1,5 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) session_start();
+if (session_status() === PHP_SESSION_NONE) session_start(); // Start session if not already started
 ?>
 
 <header class="site-header">
@@ -15,9 +15,9 @@ if (session_status() === PHP_SESSION_NONE) session_start();
     <nav class="nav">
       <a href="../php/infos.php" class="nav-link">Contact us</a>
 
-      <?php if (!empty($_SESSION["user"])): ?>
-        <span class="nav-link nav-link--secondary">
-          <?= htmlspecialchars($_SESSION["user"]["name"]) ?>
+      <?php if (!empty($_SESSION["user"])): ?> <!-- If user is logged in, show their name and a logout link -->
+        <span class="nav-link nav-link--secondary"> <!-- Display the logged-in user's name safely using htmlspecialchars to prevent XSS -->
+          <?= htmlspecialchars($_SESSION["user"]["name"]) ?> <!-- Output the user's name, ensuring it's properly escaped to prevent XSS attacks -->
         </span>
         <a href="../php/auth_logout.php" class="nav-link nav-link--secondary">Logout</a>
       <?php else: ?>
