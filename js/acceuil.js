@@ -38,6 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("HTTP ERROR", res.status, url, txt);
       throw new Error("HTTP " + res.status);
     }
+
     try {
       return JSON.parse(txt);
     } catch (e) {
@@ -59,8 +60,21 @@ document.addEventListener("DOMContentLoaded", () => {
     `).join("");
   }
 
-  function cardsEntreprises(rows) {
-    if (!rows || rows.length === 0) return `<div class="results-empty">Aucune entreprise</div>`;
+  function cardsEntreprisesFromStages(stageRows) {
+    const map = new Map(); // id_entreprise => entreprise
+    (stageRows || []).forEach(r => {
+      if (!map.has(r.id_national_entreprise)) {
+        map.set(r.id_national_entreprise, {
+          nom_entreprise: r.nom_entreprise,
+          secteur_activite_entreprise: r.secteur_activite_entreprise,
+          nom_pays: r.nom_pays
+        });
+      }
+    });
+
+    const rows = Array.from(map.values());
+    if (rows.length === 0) return `<div class="results-empty">Aucune entreprise</div>`;
+
     return rows.map(r => `
       <div class="card">
         <div class="card-title">${escapeHtml(r.nom_entreprise)}</div>
@@ -120,20 +134,21 @@ document.addEventListener("DOMContentLoaded", () => {
     const payBody = document.getElementById("payBody");
 
     try {
-      const [staData, entData] = await Promise.all([
-        fetchJSON(`../php/search_stage.php?${params.toString()}`),
-        fetchJSON(`../php/search_entreprise.php?${params.toString()}`)
-      ]);
+      // ✅ 1 seule source de vérité : les STAGES
+      const staData = await fetchJSON(`../php/search_stage.php?${params.toString()}`);
+      const stageRows = staData.results || [];
 
-      staBody.innerHTML = cardsStages(staData.results);
-      entBody.innerHTML = cardsEntreprises(entData.results);
+      // Stages
+      staBody.innerHTML = cardsStages(stageRows);
 
-      const countries = new Set();
-      (staData.results || []).forEach(r => r.nom_pays && countries.add(r.nom_pays.trim()));
-      (entData.results || []).forEach(r => r.nom_pays && countries.add(r.nom_pays.trim()));
+      // Entreprises dérivées des stages
+      entBody.innerHTML = cardsEntreprisesFromStages(stageRows);
 
-      if (countries.size > 0) {
-        const names = Array.from(countries).join(",");
+      // Pays = pays uniques des stages
+      const countries = Array.from(new Set(stageRows.map(r => (r.nom_pays || "").trim()).filter(Boolean)));
+
+      if (countries.length > 0) {
+        const names = countries.join(",");
         const payData = await fetchJSON(`../php/get_pays_details.php?names=${encodeURIComponent(names)}`);
         payBody.innerHTML = cardsPays(payData.results);
       } else {
@@ -146,7 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // ✅ EVENT DELEGATION : fonctionne dans tous les cas
+  // ✅ clic chips : delegation (toujours capté)
   document.addEventListener("click", (e) => {
     const btn = e.target.closest(".chip[data-key]");
     if (!btn) return;
@@ -154,8 +169,6 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
     const k = btn.dataset.key;
     const v = btn.dataset.val;
-
-    console.log("CLICK CHIP", k, v); // ✅ tu dois voir ça dans la console
 
     advState[k] = (advState[k] === v) ? null : v;
     applyChipUI();
